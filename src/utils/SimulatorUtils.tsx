@@ -54,6 +54,7 @@ const addObjectToTableObj = (gateId:String, clone: any, tableobj: any) => {
 const cloneFunction = (gateId : String) => {
   let dragId = gateId + "Drag";
   let clone = createCloneObject(gateId);
+  if (!clone) return;
   clone.setAttribute( 'id', dragId );
   documentobj.onmousemove = (e: any) => {
     let d = documentobj.getElementById(dragId);
@@ -76,7 +77,7 @@ const cloneFunction = (gateId : String) => {
     const toolbox = documentobj.querySelector('.toolbox');
     if (clone && !isOnTable && clone.parentNode === toolbox) {
       toolbox.removeChild(clone);
-      clone = null;
+      clone = undefined;
     }
   };
 }

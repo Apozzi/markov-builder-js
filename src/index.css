@@ -59,3 +59,58 @@ code {
   border-radius: 50%; 
   border: 5px solid white; 
 }
+
+.control {
+  display: none;
+  position: fixed;
+  background: #584b4f;
+  width: 140px;
+  height: 140px;
+  right: 48px;
+  top: 71px;
+  border-radius: 50%;
+  border: 2px solid #453138;
+}
+
+.control-center {
+    position: absolute;
+    border: 2px solid #453138;
+    border-radius: 51px;
+    width: 48px;
+    height: 48px;
+    top: 45px;
+    left: 43px;
+    font-size: large;
+}
+
+.control-left {
+    font-size: 30px;
+    position: absolute;
+    left: 10px;
+    top: 49px;
+    color: #453138;
+}
+
+.control-right {
+    font-size: 30px;
+    position: absolute;
+    right: 11px;
+    top: 49px;
+    color: #453138;
+}
+
+.control-botton {
+    font-size: 30px;
+    position: absolute;
+    left: 55px;
+    bottom: 5px;
+    color: #453138;
+}
+
+.control-top {
+    font-size: 30px;
+    position: absolute;
+    left: 56px;
+    top: 3px;
+    color: #453138;
+}

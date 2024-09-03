@@ -26,7 +26,14 @@ export default class App extends React.Component {
       <div id="app" className="App" tabIndex={0} onKeyDown={(event) => this.onKeyPressed(event)}>
         <NavBar></NavBar>
         <ToolBox callbackPlaying={this.onChangePlayState}></ToolBox>
-        <GraphSchematics isPlaying={this.state.isPlaying}></GraphSchematics>
+        <div className='control'>
+          <div className='control-top '>▲</div>
+          <div className='control-left'>◀</div>
+          <div className='control-center'></div>
+          <div className='control-right'>▶</div>
+          <div className='control-botton'>▼</div>
+        </div>
+        <GraphSchematics></GraphSchematics>
       </div>
     );
   }

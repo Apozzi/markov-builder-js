@@ -1,4 +1,6 @@
 .graph-schematics {
     color: white;
     padding: 10px;
+    user-select: none; 
+    margin-left: 160px;
 }
