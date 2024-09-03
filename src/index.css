@@ -61,7 +61,7 @@ code {
 }
 
 .control {
-  display: none;
+  transform: scale(0.7);
   position: fixed;
   background: #584b4f;
   width: 140px;
