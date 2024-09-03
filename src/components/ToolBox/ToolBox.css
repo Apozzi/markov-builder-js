@@ -1,0 +1,59 @@
+.toolbox {
+    background-color: #584b4f;
+    min-height: 90px;
+    display: flex;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    padding: 2px 15px;
+}
+
+.play-button {
+    background: lightgreen;
+    padding: 22px;
+    padding-top: 8px;
+    font-size: 31px;
+    border-radius: 10px;
+    margin: 35px;
+    font-family: none;
+    margin-top: 43px;
+    height: 22px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.play-button:hover {
+    background: #3bd23b;
+}
+
+.pause-button {
+    background: #f98888;
+    padding: 22px;
+    padding-top: 4px;
+    font-size: 31px;
+    border-radius: 10px;
+    margin: 35px;
+    font-family: none;
+    margin-top: 43px;
+    height: 27px;
+    width: 31px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.pause-button:hover {
+    background: #cc3636;
+}
+
+.toolbox--more-button {
+    margin: 30px;
+    cursor: pointer;
+}
+
+.toolbox--separation {
+    margin: 20px 20px;
+    outline: 1px solid #7b3e3e;
+}
+
+.toolbox-text {
+    font-size: 15px;
+}
