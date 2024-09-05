@@ -1,3 +1,5 @@
+import GraphSchematicsManager from "../components/GraphSchematics/GraphSchematicsManager";
+import AlphabetIterator from "./AlphabetIterator";
 
 
 
@@ -24,7 +26,7 @@ const createCloneObject = (objectId: String) => {
     clone.style.top = '-400px';
     clone.style.zIndex = "999";
     clone.innerHTML = `
-        <div class="vertice"></div>
+        <div class="vertice">?</div>
     `;
 
     return clone;
@@ -51,6 +53,9 @@ const addObjectToTableObj = (gateId:String, clone: any, tableobj: any) => {
 
 }
 
+const windowOffsetX = 170;
+const windowOffsetY= 60;
+
 const cloneFunction = (gateId : String) => {
   let dragId = gateId + "Drag";
   let clone = createCloneObject(gateId);
@@ -65,19 +70,15 @@ const cloneFunction = (gateId : String) => {
   };
   documentobj.querySelector('.toolbox').appendChild( clone );
   documentobj.onmouseup = (e: any) => {
-    documentobj.onmousemove = () => {};
-    let tableobjs = document.getElementsByClassName('table-box');
-    let isOnTable = false
-    Array.from(tableobjs).forEach(tableobj => {
-      if (overlaps(clone, tableobj)) {
-        isOnTable = true;
-        addObjectToTableObj(gateId, clone, tableobj);
-      }
-    });
-    const toolbox = documentobj.querySelector('.toolbox');
-    if (clone && !isOnTable && clone.parentNode === toolbox) {
-      toolbox.removeChild(clone);
+    documentobj.onmousedown= () => {};
+    const x = e.clientX-windowOffsetX;
+    const y = e.clientY-windowOffsetY;
+    GraphSchematicsManager.addVertex({x, y, label:AlphabetIterator.getNextLetter()});
+    if (clone) {
+      clone.remove();
       clone = undefined;
+      documentobj.onmousemove = null;
+      documentobj.onmouseup = null;
     }
   };
 }

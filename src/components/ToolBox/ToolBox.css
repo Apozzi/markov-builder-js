@@ -56,3 +56,12 @@
 .toolbox-text {
     font-size: 15px;
 }
+
+.toolbox-crosshair {
+    cursor: crosshair !important;
+}
+
+.toolbox-button-on {
+    background-color: #606477 !important;
+    box-shadow: 0 0 20px rgba(30, 144, 255, 0.8);
+}
