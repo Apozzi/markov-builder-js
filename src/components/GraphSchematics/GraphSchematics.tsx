@@ -94,6 +94,14 @@ export default class GraphSchematics extends React.Component<{}, {
   };
 
   handleMouseDown = (event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const { selectedVertex } = this.state;
+  
+    // Verifica se o clique foi fora de um círculo ou retângulo
+    if (selectedVertex !== null && target.tagName !== 'circle' && target.tagName !== 'rect') {
+      this.setState({ selectedVertex: null });
+    }
+  
     if (!this.state.edgeCreationMode) {
       this.isDragging = true;
       this.startX = event.clientX;
@@ -185,11 +193,9 @@ export default class GraphSchematics extends React.Component<{}, {
   };
 
   addEdge = (source: number, target: number) => {
-    if (source !== target) {
-      this.setState(prevState => ({
-        edges: [...prevState.edges, { source, target }]
-      }));
-    }
+    this.setState(prevState => ({
+      edges: [...prevState.edges, { source, target }]
+    }));
   };
 
   toggleEdgeCreationMode = () => {
@@ -246,6 +252,18 @@ export default class GraphSchematics extends React.Component<{}, {
     return edges.map((edge, index) => {
       const source = vertices[edge.source];
       const target = vertices[edge.target];
+
+      if (edge.source === edge.target) {
+        // Render self-loop
+        return this.renderSelfLoop(source, index, scale);
+      } else {
+        // Render normal edge
+        return this.renderNormalEdge(source, target, index, scale);
+      }
+    });
+  }
+
+  renderNormalEdge(source: Vertex, target: Vertex, index: number, scale: number) {
       const dx = target.x - source.x;
       const dy = target.y - source.y;
 
@@ -268,31 +286,74 @@ export default class GraphSchematics extends React.Component<{}, {
 
       const path = `M ${sourceX * scale} ${sourceY * scale} Q ${controlX * scale} ${controlY * scale} ${targetX * scale} ${targetY * scale}`;
 
-      return (
-        <g key={index}>
-          <defs>
-            <marker
-              id="arrowhead"
-              markerWidth="10"
-              markerHeight="7"
-              refX="0"
-              refY="3.5"
-              orient="auto"
-            >
-              <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
-            </marker>
-          </defs>
-          <path
-            d={path}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="2"
-            markerEnd="url(#arrowhead)"
-          />
-        </g>
-      );
-    });
+    return (
+      <g key={index}>
+        <defs>
+          <marker
+            id="arrowhead"
+            markerWidth="10"
+            markerHeight="7"
+            refX="0"
+            refY="3.5"
+            orient="auto"
+          >
+            <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+          </marker>
+        </defs>
+        <path
+          d={path}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="2"
+          markerEnd="url(#arrowhead)"
+        />
+      </g>
+    );
   }
+
+  renderSelfLoop(vertex: Vertex, index: number, scale: number) {
+    const loopRadius = vertexRadius * 0.8;
+    const startAngle = -Math.PI / 4;
+    const endAngle = Math.PI + Math.PI / 4;
+
+    const offsetEnd = 1;
+    const offsetStart = 5;
+
+    const startX = vertex.x + (vertexRadius + offsetStart) * Math.cos(startAngle);
+    const startY = vertex.y + (vertexRadius + offsetStart) * Math.sin(startAngle);
+    const endX = vertex.x + (vertexRadius + offsetEnd) * Math.cos(endAngle);
+    const endY = vertex.y + (vertexRadius + offsetEnd) * Math.sin(endAngle);
+
+    const path = `
+      M ${endX * scale} ${endY * scale}
+      A ${loopRadius * scale} ${loopRadius * scale} 0 1 1 ${startX * scale} ${startY * scale}
+    `;
+
+    return (
+      <g key={index}>
+        <defs>
+          <marker
+            id="self-loop-arrowhead"
+            markerWidth="10"
+            markerHeight="7"
+            refX="8"
+            refY="3.5"
+            orient="auto"
+          >
+            <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+          </marker>
+        </defs>
+        <path
+          d={path}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="2"
+          markerEnd="url(#self-loop-arrowhead)"
+        />
+      </g>
+    );
+  }
+
 
   render() {
     const { width, height, edgeCreationMode } = this.state;
