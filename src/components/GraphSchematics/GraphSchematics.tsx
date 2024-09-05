@@ -2,6 +2,8 @@ import React from 'react';
 import './GraphSchematics.css';
 import GraphSchematicsManager from './GraphSchematicsManager';
 import AlphabetIterator from '../../utils/AlphabetIterator';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const offsetWidth = 180;
 const minZoom = 0.5;
@@ -11,6 +13,7 @@ const selectionBorderSize = 20
 const minDistance = vertexRadius * 2 + selectionBorderSize;
 
 interface Vertex {
+  id: number;
   x: number;
   y: number;
   label: string;
@@ -20,6 +23,8 @@ interface Edge {
   source: number;
   target: number;
 }
+
+let nextVertexId = 0;
 
 let mounted = false;
 export default class GraphSchematics extends React.Component<{}, { 
@@ -77,17 +82,17 @@ export default class GraphSchematics extends React.Component<{}, {
     });
   };
 
-  handleVertexMouseDown = (event: React.MouseEvent, index: number) => {
+  handleVertexMouseDown = (event: React.MouseEvent, id: number) => {
     if (this.state.edgeCreationMode) {
       if (this.state.edgeStartVertex === null) {
-        this.setState({ edgeStartVertex: index });
+        this.setState({ edgeStartVertex: id });
       } else {
-        this.addEdge(this.state.edgeStartVertex, index);
+        this.addEdge(this.state.edgeStartVertex, id);
         this.setState({ edgeCreationMode: false, edgeStartVertex: null });
         GraphSchematicsManager.exitEdgeCreationMode();
       }
     } else {
-      this.setState({ draggingVertex: true, selectedVertex: index });
+      this.setState({ draggingVertex: true, selectedVertex: id });
       this.startX = event.clientX;
       this.startY = event.clientY;
     }
@@ -97,8 +102,7 @@ export default class GraphSchematics extends React.Component<{}, {
     const target = event.target as HTMLElement;
     const { selectedVertex } = this.state;
   
-    // Verifica se o clique foi fora de um círculo ou retângulo
-    if (selectedVertex !== null && target.tagName !== 'circle' && target.tagName !== 'rect') {
+    if (selectedVertex !== null && target.tagName !== 'circle' && target.tagName !== 'rect' && target.tagName !== 'text') {
       this.setState({ selectedVertex: null });
     }
   
@@ -111,46 +115,48 @@ export default class GraphSchematics extends React.Component<{}, {
 
   handleMouseMove = (event: React.MouseEvent) => {
     if (!this.isDragging) return;
-
+  
     const { draggingVertex, selectedVertex, vertices, scale } = this.state;
-
+  
     if (draggingVertex && selectedVertex !== null) {
       const deltaX = (event.clientX - this.startX) / (scale**2);
       const deltaY = (event.clientY - this.startY) / (scale**2);
 
-      const newX = vertices[selectedVertex].x + deltaX;
-      const newY = vertices[selectedVertex].y + deltaY;
-
-      const isColliding = vertices.some((vertex, index) => {
-        if (index === selectedVertex) return false;
-        const dx = vertex.x - newX;
-        const dy = vertex.y - newY;
+      const vertex = vertices.find(v => v.id === selectedVertex);
+      if (!vertex) return;
+  
+      const newX = vertex.x + deltaX;
+      const newY = vertex.y + deltaY;
+  
+      const isColliding = vertices.some((v) => {
+        if (v.id === selectedVertex) return false;
+        const dx = v.x - newX;
+        const dy = v.y - newY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         return distance < minDistance / scale;
       });
-
+  
       if (!isColliding) {
-        const updatedVertices = [...vertices];
-        updatedVertices[selectedVertex] = {
-          ...updatedVertices[selectedVertex],
-          x: newX,
-          y: newY,
-        };
-
+        const updatedVertices = vertices.map(v =>
+          v.id === selectedVertex
+            ? { ...v, x: newX, y: newY }
+            : v
+        );
+  
         this.setState({ vertices: updatedVertices });
-
+  
         this.startX = event.clientX;
         this.startY = event.clientY;
       }
     } else {
       const deltaX = event.clientX - this.startX;
       const deltaY = event.clientY - this.startY;
-
+  
       this.setState(prevState => ({
         offsetX: prevState.offsetX + deltaX,
         offsetY: prevState.offsetY + deltaY,
       }));
-
+  
       this.startX = event.clientX;
       this.startY = event.clientY;
     }
@@ -172,19 +178,20 @@ export default class GraphSchematics extends React.Component<{}, {
 
   addVertex = (x: number, y: number, label: string) => {
     const { offsetX, offsetY, scale, vertices } = this.state;
-    const newX = (x - offsetX) / (scale**2);
-    const newY = (y - offsetY) / (scale**2);
-
+    const newX = (x - offsetX) / (scale ** 2);
+    const newY = (y - offsetY) / (scale ** 2);
+  
     const isOverlapping = vertices.some(vertex => {
       const dx = vertex.x - newX;
       const dy = vertex.y - newY;
       const distance = Math.sqrt(dx * dx + dy * dy);
       return distance < minDistance / scale;
     });
-
+  
     if (!isOverlapping) {
+      nextVertexId +=1;
       this.setState(prevState => ({
-        vertices: [...prevState.vertices, { x: newX, y: newY, label }]
+        vertices: [...prevState.vertices, { id: nextVertexId, x: newX, y: newY, label }]
       }));
     } else {
       AlphabetIterator.subIndex();
@@ -192,9 +199,9 @@ export default class GraphSchematics extends React.Component<{}, {
     }
   };
 
-  addEdge = (source: number, target: number) => {
+  addEdge = (sourceId: number, targetId: number) => {
     this.setState(prevState => ({
-      edges: [...prevState.edges, { source, target }]
+      edges: [...prevState.edges, { source: sourceId, target: targetId }]
     }));
   };
 
@@ -203,6 +210,19 @@ export default class GraphSchematics extends React.Component<{}, {
       edgeCreationMode: !prevState.edgeCreationMode,
       edgeStartVertex: null
     }));
+  };
+
+  deleteVertex = (id: number) => {
+    this.setState(prevState => {
+      const updatedVertices = prevState.vertices.filter(vertex => vertex.id !== id);
+      const updatedEdges = prevState.edges.filter(edge => edge.source !== id && edge.target !== id);
+  
+      return {
+        vertices: updatedVertices,
+        edges: updatedEdges,
+        selectedVertex: null
+      };
+    });
   };
 
   renderGrid() {
@@ -228,20 +248,34 @@ export default class GraphSchematics extends React.Component<{}, {
 
   renderVertices() {
     const { vertices, scale, selectedVertex } = this.state;
-    return vertices.map((vertex, index) => (
-      <g key={index} transform={`translate(${vertex.x * scale},${vertex.y * scale})`} onMouseDown={(event) => this.handleVertexMouseDown(event, index)}>
-        {selectedVertex === index && (
-          <rect transform={`scale(${1/this.state.scale})`}
-            x={(-vertexRadius - selectionBorderSize) * scale}
-            y={(-vertexRadius - selectionBorderSize) * scale}
-            width={(vertexRadius + selectionBorderSize) * 2 * scale}
-            height={(vertexRadius + selectionBorderSize) * 2 * scale}
-            fill="rgba(255, 255, 255, 0.3)"
-            rx="15"
-            ry="15"
-          />
+  
+    return vertices.map((vertex) => (
+      <g key={vertex.id} transform={`translate(${vertex.x * scale},${vertex.y * scale})`} onMouseDown={(event) => this.handleVertexMouseDown(event, vertex.id)}>
+        {selectedVertex === vertex.id && (
+          <>
+            <rect transform={`scale(${1/this.state.scale})`}
+              x={(-vertexRadius - selectionBorderSize) * scale}
+              y={(-vertexRadius - selectionBorderSize) * scale}
+              width={(vertexRadius + selectionBorderSize) * 2 * scale}
+              height={(vertexRadius + selectionBorderSize) * 2 * scale}
+              fill="rgba(255, 255, 255, 0.3)"
+              rx="15"
+              ry="15"
+            />
+            
+            <g
+              onMouseDown={() => this.deleteVertex(vertex.id)}
+              style={{ cursor: 'pointer' }}
+              transform={`translate(${(vertexRadius + selectionBorderSize - 15) }, ${(-vertexRadius - selectionBorderSize - 15) })`}
+            >
+              <rect width="30" height="30" rx="5" ry="5" />
+              <foreignObject x="0" y="0" width="30" height="30" className='graph-schematics--trash-icon-container'>
+                <FontAwesomeIcon icon={faTrash} size="lg" className='graph-schematics--trash-icon'/>
+              </foreignObject>
+            </g>
+          </>
         )}
-        <circle cx={0} cy={0} r={40} fill="#21171c" />
+        <circle cx={0} cy={0} r={vertexRadius} fill="#21171c" />
         <text x={0} y={9} textAnchor="middle" fill="white" fontSize={30}>{vertex.label}</text>
       </g>
     ));
@@ -250,14 +284,14 @@ export default class GraphSchematics extends React.Component<{}, {
   renderEdges() {
     const { vertices, edges, scale } = this.state;
     return edges.map((edge, index) => {
-      const source = vertices[edge.source];
-      const target = vertices[edge.target];
-
-      if (edge.source === edge.target) {
-        // Render self-loop
+      const source = vertices.find(vertex => vertex.id === edge.source);
+      const target = vertices.find(vertex => vertex.id === edge.target);
+  
+      if (!source || !target) return null;
+  
+      if (source.id === target.id) {
         return this.renderSelfLoop(source, index, scale);
       } else {
-        // Render normal edge
         return this.renderNormalEdge(source, target, index, scale);
       }
     });
@@ -326,11 +360,11 @@ export default class GraphSchematics extends React.Component<{}, {
 
     const path = `
       M ${endX * scale} ${endY * scale}
-      A ${loopRadius * scale} ${loopRadius * scale} 0 1 1 ${startX * scale} ${startY * scale}
+      A ${loopRadius * scale} ${loopRadius * scale} 0 1 1 ${startX * scale} ${startY * scale }
     `;
 
     return (
-      <g key={index}>
+      <g key={index} >
         <defs>
           <marker
             id="self-loop-arrowhead"
