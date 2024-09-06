@@ -2,6 +2,8 @@ import React from 'react';
 import SimulatorUtils from '../../utils/SimulatorUtils.tsx';
 import './ToolBox.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartSimple } from '@fortawesome/free-solid-svg-icons';
 
 export default class ToolBox extends React.Component<{callbackPlaying : any}> {
 
@@ -45,6 +47,11 @@ export default class ToolBox extends React.Component<{callbackPlaying : any}> {
         <div id="aresta" className={"toolbox-button " + (GraphSchematicsManager.getStateEdgeCreationMode() ? 'toolbox-button-on toolbox-crosshair' : '')} onMouseDown={() => this.toggleEdgeMode()} >
           <div className="toolbox-icon">/</div>
           <div className="toolbox-text">Adicionar Aresta</div>
+        </div>
+
+        <div id="aresta" className={"toolbox-button"}>
+          <div className="toolbox-icon"><FontAwesomeIcon icon={faChartSimple} /></div>
+          <div className="toolbox-text">Gráficos</div>
         </div>
         
       </div>

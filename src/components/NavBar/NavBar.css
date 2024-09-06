@@ -10,6 +10,9 @@
 .navbar--button {
     font-size: large;
     padding: 10px;
+    border-right: solid #412935 2px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .navbar--button:hover {

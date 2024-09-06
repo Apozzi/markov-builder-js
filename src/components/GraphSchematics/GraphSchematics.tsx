@@ -38,7 +38,8 @@ export default class GraphSchematics extends React.Component<{}, {
   selectedVertex: number | null, 
   draggingVertex: boolean,
   edgeCreationMode: boolean,
-  edgeStartVertex: number | null
+  edgeStartVertex: number | null,
+  edgeWeights: { [key: string]: number };
 }> {
 
   constructor(props: any) {
@@ -55,7 +56,8 @@ export default class GraphSchematics extends React.Component<{}, {
       selectedVertex: null,
       draggingVertex: false,
       edgeCreationMode: false,
-      edgeStartVertex: null
+      edgeStartVertex: null,
+      edgeWeights: {},
     };
     this.isDragging = false;
     this.startX = 0;
@@ -292,33 +294,55 @@ export default class GraphSchematics extends React.Component<{}, {
       if (source.id === target.id) {
         return this.renderSelfLoop(source, index, scale);
       } else {
-        return this.renderNormalEdge(source, target, index, scale);
+        const dual = edges.find(edge => target.id === edge.source && source.id === edge.target);
+        if (!dual) {
+          return this.renderNormalEdge(source, target, index, scale, 0.1, 0.04);
+        } else {
+          return this.renderNormalEdge(source, target, index, scale, 0.3, 0.1);
+        }
       }
     });
   }
 
-  renderNormalEdge(source: Vertex, target: Vertex, index: number, scale: number) {
-      const dx = target.x - source.x;
-      const dy = target.y - source.y;
+  renderNormalEdge(source: Vertex, target: Vertex, index: number, scale: number, angleAdjustment:number, curvature:number) {
+    const dx = target.x - source.x;
+    const dy = target.y - source.y;
+    
+    const startAngle = Math.atan2(dy, dx) + angleAdjustment;
+    const endAngle = Math.atan2(dy, dx) - angleAdjustment;
+    
+    const sourceX = source.x + vertexRadius * Math.cos(startAngle);
+    const sourceY = source.y + vertexRadius * Math.sin(startAngle);
+    const targetX = target.x - vertexRadius*1.4 * Math.cos(endAngle);
+    const targetY = target.y - vertexRadius*1.4 * Math.sin(endAngle);
+    
+    const midX = (sourceX + targetX) / 2;
+    const midY = (sourceY + targetY) / 2;
+    
+    const controlX = midX - (targetY - sourceY) * curvature;
+    const controlY = midY + (targetX - sourceX) * curvature;
 
-      const angleAdjustment = 0.3; 
-      
-      const startAngle = Math.atan2(dy, dx) + angleAdjustment;
-      const endAngle = Math.atan2(dy, dx) - angleAdjustment;
-      
-      const sourceX = source.x + vertexRadius * Math.cos(startAngle);
-      const sourceY = source.y + vertexRadius * Math.sin(startAngle);
-      const targetX = target.x - vertexRadius*1.4 * Math.cos(endAngle);
-      const targetY = target.y - vertexRadius*1.4 * Math.sin(endAngle);
-      
-      const midX = (sourceX + targetX) / 2;
-      const midY = (sourceY + targetY) / 2;
-      
-      const curvature = 0.1;
-      const controlX = midX - (targetY - sourceY) * curvature;
-      const controlY = midY + (targetX - sourceX) * curvature;
+    const path = `M ${sourceX * scale} ${sourceY * scale} Q ${controlX * scale} ${controlY * scale} ${targetX * scale} ${targetY * scale}`;
 
-      const path = `M ${sourceX * scale} ${sourceY * scale} Q ${controlX * scale} ${controlY * scale} ${targetX * scale} ${targetY * scale}`;
+    const edgeKey = `${source.id}-${target.id}`;
+    const weight = this.state.edgeWeights[edgeKey] || 0;
+
+    // Calculate the position for the input
+    const t = 0.5; // Parameter for the midpoint of the quadratic curve
+    const inputX = (1-t)*(1-t)*sourceX + 2*(1-t)*t*controlX + t*t*targetX;
+    const inputY = (1-t)*(1-t)*sourceY + 2*(1-t)*t*controlY + t*t*targetY;
+
+    // Calculate the tangent at the midpoint to position the input above the curve
+    const tangentX = 2*(1-t)*(controlX-sourceX) + 2*t*(targetX-controlX);
+    const tangentY = 2*(1-t)*(controlY-sourceY) + 2*t*(targetY-controlY);
+    const tangentLength = Math.sqrt(tangentX*tangentX + tangentY*tangentY);
+    const normalX = -tangentY / tangentLength;
+    const normalY = tangentX / tangentLength;
+
+    // Position the input slightly above the curve
+    const offsetDistance = 20; // Adjust this value to move the input further from or closer to the curve
+    const inputPosX = (inputX + normalX * offsetDistance) * scale;
+    const inputPosY = (inputY + normalY * offsetDistance) * scale;
 
     return (
       <g key={index}>
@@ -341,9 +365,45 @@ export default class GraphSchematics extends React.Component<{}, {
           strokeWidth="2"
           markerEnd="url(#arrowhead)"
         />
+        <foreignObject className='graph-schematics--input'
+          x={inputPosX - 15 * scale}
+          y={inputPosY - 15 * scale}
+          width={30 * scale}
+          height={20 * scale}
+        >
+          <input
+            type="number"
+            className='input-edge'
+            value={weight}
+            onChange={(e) => this.handleEdgeWeightChange(edgeKey, Number(e.target.value))}
+            step="0.1"
+            style={{
+              width: '100%',
+              height: '100%',
+              background: 'transparent',
+              border: '0',
+              borderRadius: '4px',
+              textAlign: 'center',
+              fontSize: `${20 * scale}px`,
+              color: 'white',
+              outline: 'none'
+            }}
+          />
+        </foreignObject>
       </g>
     );
   }
+
+  handleEdgeWeightChange = (edgeKey: string, weight: number) => {
+    this.setState(prevState => ({
+      edgeWeights: {
+        ...prevState.edgeWeights,
+        [edgeKey]: weight
+      }
+    }));
+  }
+
+  
 
   renderSelfLoop(vertex: Vertex, index: number, scale: number) {
     const loopRadius = vertexRadius * 0.8;
@@ -360,11 +420,20 @@ export default class GraphSchematics extends React.Component<{}, {
 
     const path = `
       M ${endX * scale} ${endY * scale}
-      A ${loopRadius * scale} ${loopRadius * scale} 0 1 1 ${startX * scale} ${startY * scale }
+      A ${loopRadius * scale} ${loopRadius * scale} 0 1 1 ${startX * scale} ${startY * scale}
     `;
 
+    const edgeKey = `${vertex.id}-${vertex.id}`;
+    const weight = this.state.edgeWeights[edgeKey] || 0;
+
+    // Calculate position for the input
+    const inputAngle = -Math.PI / 2; // Top of the loop
+    const inputRadius = loopRadius + vertexRadius + 15; // Adjust this value to position the input
+    const inputX = vertex.x + inputRadius * Math.cos(inputAngle);
+    const inputY = vertex.y + inputRadius * Math.sin(inputAngle);
+
     return (
-      <g key={index} >
+      <g key={index}>
         <defs>
           <marker
             id="self-loop-arrowhead"
@@ -384,6 +453,30 @@ export default class GraphSchematics extends React.Component<{}, {
           strokeWidth="2"
           markerEnd="url(#self-loop-arrowhead)"
         />
+        <foreignObject
+          x={(inputX - 20) * scale}
+          y={(inputY - 10) * scale}
+          width={40 * scale}
+          height={20 * scale}
+        >
+          <input
+            type="number"
+            step="0.1"
+            value={weight}
+            onChange={(e) => this.handleEdgeWeightChange(edgeKey, Number(e.target.value))}
+            style={{
+              width: '100%',
+              height: '100%',
+              background: 'transparent',
+              border: '0',
+              borderRadius: '4px',
+              textAlign: 'center',
+              fontSize: `${20 * scale}px`,
+              color: 'white',
+              outline: 'none'
+            }}
+          />
+        </foreignObject>
       </g>
     );
   }

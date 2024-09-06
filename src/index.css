@@ -53,6 +53,10 @@ code {
   text-align: center;
 }
 
+.toolbox-button:hover {
+  background-color: #413438;
+}
+
 .vertice {
   font-size: 40;
   padding-top: 18px;
