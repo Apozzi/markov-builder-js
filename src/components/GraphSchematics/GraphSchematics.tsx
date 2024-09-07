@@ -24,6 +24,12 @@ interface Edge {
   target: number;
 }
 
+interface EdgeWeights {
+  [sourceId: number]: {
+    [targetId: number]: number;
+  };
+}
+
 let nextVertexId = 0;
 
 let mounted = false;
@@ -39,7 +45,7 @@ export default class GraphSchematics extends React.Component<{}, {
   draggingVertex: boolean,
   edgeCreationMode: boolean,
   edgeStartVertex: number | null,
-  edgeWeights: { [key: string]: number };
+  edgeWeights: EdgeWeights;
 }> {
 
   constructor(props: any) {
@@ -202,9 +208,37 @@ export default class GraphSchematics extends React.Component<{}, {
   };
 
   addEdge = (sourceId: number, targetId: number) => {
-    this.setState(prevState => ({
-      edges: [...prevState.edges, { source: sourceId, target: targetId }]
-    }));
+    this.setState(prevState => {
+      const newEdge = { source: sourceId, target: targetId };
+      const newEdges = [...prevState.edges, newEdge];
+      const newEdgeWeights = this.redistributeWeights(prevState.edgeWeights, sourceId, targetId);
+      return {
+        edges: newEdges,
+        edgeWeights: newEdgeWeights
+      };
+    });
+  };
+
+  redistributeWeights = (currentWeights: EdgeWeights, sourceId: number, targetId: number): EdgeWeights => {
+    const newWeights = { ...currentWeights };
+    if (!newWeights[sourceId]) {
+      newWeights[sourceId] = {};
+    }
+    
+    const sourceWeights = newWeights[sourceId];
+    const isNewEdge = sourceWeights[targetId] === undefined;
+    const totalEdges = isNewEdge ? Object.keys(sourceWeights).length + 1 : Object.keys(sourceWeights).length;
+    const newWeight = 1 / totalEdges;
+    
+    Object.keys(sourceWeights).forEach((existingTargetId:any) => {
+      sourceWeights[existingTargetId] = newWeight;
+    });
+    
+    if (isNewEdge) {
+      sourceWeights[targetId] = newWeight;
+    }
+    
+    return newWeights;
   };
 
   toggleEdgeCreationMode = () => {
@@ -324,23 +358,19 @@ export default class GraphSchematics extends React.Component<{}, {
 
     const path = `M ${sourceX * scale} ${sourceY * scale} Q ${controlX * scale} ${controlY * scale} ${targetX * scale} ${targetY * scale}`;
 
-    const edgeKey = `${source.id}-${target.id}`;
-    const weight = this.state.edgeWeights[edgeKey] || 0;
+    const weight = this.state.edgeWeights[source.id]?.[target.id] || 0;
 
-    // Calculate the position for the input
-    const t = 0.5; // Parameter for the midpoint of the quadratic curve
+    const t = 0.5; 
     const inputX = (1-t)*(1-t)*sourceX + 2*(1-t)*t*controlX + t*t*targetX;
     const inputY = (1-t)*(1-t)*sourceY + 2*(1-t)*t*controlY + t*t*targetY;
 
-    // Calculate the tangent at the midpoint to position the input above the curve
     const tangentX = 2*(1-t)*(controlX-sourceX) + 2*t*(targetX-controlX);
     const tangentY = 2*(1-t)*(controlY-sourceY) + 2*t*(targetY-controlY);
     const tangentLength = Math.sqrt(tangentX*tangentX + tangentY*tangentY);
     const normalX = -tangentY / tangentLength;
     const normalY = tangentX / tangentLength;
 
-    // Position the input slightly above the curve
-    const offsetDistance = 20; // Adjust this value to move the input further from or closer to the curve
+    const offsetDistance = 20; 
     const inputPosX = (inputX + normalX * offsetDistance) * scale;
     const inputPosY = (inputY + normalY * offsetDistance) * scale;
 
@@ -375,7 +405,9 @@ export default class GraphSchematics extends React.Component<{}, {
             type="number"
             className='input-edge'
             value={weight}
-            onChange={(e) => this.handleEdgeWeightChange(edgeKey, Number(e.target.value))}
+            min="0"
+            max="1"
+            onChange={(e) => this.handleEdgeWeightChange(source.id, target.id, Number(e.target.value))}
             step="0.1"
             style={{
               width: '100%',
@@ -394,15 +426,32 @@ export default class GraphSchematics extends React.Component<{}, {
     );
   }
 
-  handleEdgeWeightChange = (edgeKey: string, weight: number) => {
-    this.setState(prevState => ({
-      edgeWeights: {
-        ...prevState.edgeWeights,
-        [edgeKey]: weight
+  handleEdgeWeightChange = (sourceId: number, targetId: number, newWeight: number) => {
+    this.setState(prevState => {
+      const newWeights = { ...prevState.edgeWeights };
+      if (!newWeights[sourceId]) {
+        newWeights[sourceId] = {};
       }
-    }));
-  }
-
+      
+      const sourceWeights = newWeights[sourceId];
+      const oldWeight = sourceWeights[targetId] || 0;
+      const weightDifference = newWeight - oldWeight;
+      
+      const otherTargets = Object.keys(sourceWeights).map(Number).filter(id => id !== targetId);
+      const totalOtherWeight = otherTargets.reduce((sum, id) => sum + sourceWeights[id], 0);
+      
+      if (totalOtherWeight > 0) {
+        const adjustmentFactor = (totalOtherWeight - weightDifference) / totalOtherWeight;
+        otherTargets.forEach(id => {
+          sourceWeights[id] *= adjustmentFactor;
+        });
+      }
+      
+      sourceWeights[targetId] = newWeight;
+      
+      return { edgeWeights: newWeights };
+    });
+  };
   
 
   renderSelfLoop(vertex: Vertex, index: number, scale: number) {
@@ -423,12 +472,9 @@ export default class GraphSchematics extends React.Component<{}, {
       A ${loopRadius * scale} ${loopRadius * scale} 0 1 1 ${startX * scale} ${startY * scale}
     `;
 
-    const edgeKey = `${vertex.id}-${vertex.id}`;
-    const weight = this.state.edgeWeights[edgeKey] || 0;
-
-    // Calculate position for the input
-    const inputAngle = -Math.PI / 2; // Top of the loop
-    const inputRadius = loopRadius + vertexRadius + 15; // Adjust this value to position the input
+    const weight = this.state.edgeWeights[vertex.id]?.[vertex.id] || 0;
+    const inputAngle = -Math.PI / 2;
+    const inputRadius = loopRadius + vertexRadius + 15; 
     const inputX = vertex.x + inputRadius * Math.cos(inputAngle);
     const inputY = vertex.y + inputRadius * Math.sin(inputAngle);
 
@@ -462,8 +508,10 @@ export default class GraphSchematics extends React.Component<{}, {
           <input
             type="number"
             step="0.1"
+            min="0"
+            max="1"
             value={weight}
-            onChange={(e) => this.handleEdgeWeightChange(edgeKey, Number(e.target.value))}
+            onChange={(e) => this.handleEdgeWeightChange(vertex.id, vertex.id, Number(e.target.value))}
             style={{
               width: '100%',
               height: '100%',
