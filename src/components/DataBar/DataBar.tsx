@@ -9,7 +9,9 @@ export default class DataBar extends React.Component<any> {
   state = {
     isPlaying: false,
     selectedVertex: {
-      label: ''
+      id: 0,
+      label: '',
+      visitCount: 0
     },
     edges: [],
     vertices: [],
@@ -31,7 +33,10 @@ export default class DataBar extends React.Component<any> {
         }
       });
       GraphSchematicsManager.onChangeVerticeArray().subscribe((vertices:any) => {
-        this.setState({vertices});
+        if (!vertices && vertices.length > 1) return;
+        const { selectedVertex } = this.state;
+        const newSelectedVertex = vertices.find((vertex:any) => vertex.id === selectedVertex.id)
+        this.setState({vertices, selectedVertex: newSelectedVertex ? newSelectedVertex : selectedVertex });
         this.forceUpdate();
       })
   }
@@ -67,7 +72,7 @@ export default class DataBar extends React.Component<any> {
   }
 
   render() {
-    const { selectedVertex, edges, vertexVisitCount, isNotVisible } = this.state;
+    const { selectedVertex, edges, isNotVisible } = this.state;
 
     return (
       <div className={`databar ${isNotVisible ? '' : 'databar-show'}`}>
@@ -109,7 +114,7 @@ export default class DataBar extends React.Component<any> {
 
           <div className="vertex-info">
             <h4>Quant. de vezes que passou nesse vértice:</h4>
-            <span className="vertex-count">{vertexVisitCount}</span>
+            <span className="vertex-count">{selectedVertex.visitCount}</span>
           </div>
         </div>
       </div>

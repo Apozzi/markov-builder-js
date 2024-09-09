@@ -94,6 +94,7 @@ code {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
 
 .control-left {
@@ -108,6 +109,7 @@ code {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
 
 .control-right {
@@ -122,9 +124,10 @@ code {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
 
-.control-botton {
+.control-bottom {
     font-size: 30px;
     position: absolute;
     left: 55px;
@@ -136,6 +139,7 @@ code {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
 
 .control-top {
@@ -150,4 +154,11 @@ code {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
+
+.control-top:hover {color: #c1b1b7;}
+.control-left:hover {color: #c1b1b7;}
+.control-right:hover {color: #c1b1b7;}
+.control-bottom:hover {color: #c1b1b7;}
+.control-center:hover {background-color: #6d6366;}

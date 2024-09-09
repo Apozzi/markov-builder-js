@@ -30,11 +30,11 @@ export default class App extends React.Component {
         <NavBar></NavBar>
         <ToolBox callbackPlaying={this.onChangePlayState}></ToolBox>
         <div className='control'>
-          <div className='control-top '>▲</div>
-          <div className='control-left'>◀</div>
-          <div className='control-center'></div>
-          <div className='control-right'>▶</div>
-          <div className='control-botton'>▼</div>
+          <div className='control-top' onMouseDown={() => GraphSchematicsManager.controlMoveUp()}>▲</div>
+          <div className='control-left' onMouseDown={() => GraphSchematicsManager.controlMoveLeft()}>◀</div>
+          <div className='control-center' onMouseDown={() => GraphSchematicsManager.controlToCenter()}></div>
+          <div className='control-right' onMouseDown={() => GraphSchematicsManager.controlMoveRight()}>▶</div>
+          <div className='control-bottom' onMouseDown={() => GraphSchematicsManager.controlMoveDown()}>▼</div>
         </div>
         <GraphSchematics></GraphSchematics>
         <DataBar></DataBar>

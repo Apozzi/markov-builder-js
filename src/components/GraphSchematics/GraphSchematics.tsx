@@ -17,6 +17,7 @@ interface Vertex {
   x: number;
   y: number;
   label: string;
+  visitCount: number;
 }
 
 interface Edge {
@@ -48,6 +49,7 @@ export default class GraphSchematics extends React.Component<{}, {
   edgeWeights: EdgeWeights;
   actualVertex: number | null,
   audioContext: AudioContext | null;
+  vertexHistory: number[];
 }> {
 
   constructor(props: any) {
@@ -68,6 +70,7 @@ export default class GraphSchematics extends React.Component<{}, {
       edgeWeights: {},
       actualVertex: null,
       audioContext: null,
+      vertexHistory: [],
     };
     this.isDragging = false;
     this.startX = 0;
@@ -114,7 +117,11 @@ export default class GraphSchematics extends React.Component<{}, {
         if (vertices.length === 0) return;
         if (state) {
           if (actualVertex === null) {
-            this.setState({ actualVertex: vertices[0].id });
+            const initialVertex = vertices[0].id;
+            this.setState({ 
+              actualVertex: initialVertex,
+              vertexHistory: [initialVertex]
+            });
             this.playBeep();
           }
           if (actualVertex === null) {
@@ -126,7 +133,18 @@ export default class GraphSchematics extends React.Component<{}, {
         } else {
           clearInterval(timer);
         }
-      })
+      });
+      GraphSchematicsManager.onChangeX().subscribe((mov:any) => {
+        const { offsetX } = this.state;
+        this.setState({offsetX: offsetX + mov});
+      });
+      GraphSchematicsManager.onChangeY().subscribe((mov:any) => {
+        const { offsetY } = this.state;
+        this.setState({offsetY: offsetY + mov});
+      });
+      GraphSchematicsManager.onOffsetCenter().subscribe(() => {
+        this.setState({offsetY: 0, offsetX: 0});
+      });
     }
     mounted = true;
   }
@@ -155,7 +173,17 @@ export default class GraphSchematics extends React.Component<{}, {
     }
 
     if (nextVertex !== null) {
-      this.setState({ actualVertex: nextVertex }, () => {
+      this.setState(prevState => {
+        const updatedVertices = prevState.vertices.map(v => 
+          v.id === nextVertex ? { ...v, visitCount: v.visitCount + 1 } : v
+        );
+        GraphSchematicsManager.changeVerticeArray(updatedVertices);
+        return {
+          actualVertex: nextVertex,
+          vertexHistory: [...prevState.vertexHistory, nextVertex],
+          vertices: updatedVertices
+        };
+      }, () => {
         this.playBeep();
       });
     }
@@ -312,7 +340,7 @@ export default class GraphSchematics extends React.Component<{}, {
     if (!isOverlapping) {
       nextVertexId +=1;
       this.setState(prevState => ({
-        vertices: [...prevState.vertices, { id: nextVertexId, x: newX, y: newY, label }]
+        vertices: [...prevState.vertices, { id: nextVertexId, x: newX, y: newY, label, visitCount: 0 }]
       }));
       GraphSchematicsManager.changeVerticeArray(this.state.vertices);
     } else {

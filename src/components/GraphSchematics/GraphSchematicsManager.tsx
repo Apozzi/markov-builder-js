@@ -2,6 +2,9 @@ import { Subject } from "rxjs";
 
 export default class GraphSchematicsManager {
 
+  private static movement = 100;
+  private static isEdgeCreationMode = false;
+
   private static addVertexSubject = new Subject();
   private static changeVertexSubject = new Subject();
   private static deleteEdgeSubject = new Subject();
@@ -10,7 +13,42 @@ export default class GraphSchematicsManager {
   private static selectedVertexObjectSubject = new Subject();
   private static changeVerticeArraySubject = new Subject();
   private static isPlayingSubject = new Subject();
-  private static isEdgeCreationMode = false;
+
+  private static offsetControlX = new Subject();
+  private static offsetControlY = new Subject();
+  private static offsetCenter = new Subject();
+
+  static controlToCenter() {
+    GraphSchematicsManager.offsetCenter.next({});
+  }
+
+  static controlMoveUp() {
+    GraphSchematicsManager.offsetControlY.next(this.movement);
+  }
+
+  static controlMoveDown() {
+    GraphSchematicsManager.offsetControlY.next(-this.movement);
+  }
+
+  static controlMoveLeft() {
+    GraphSchematicsManager.offsetControlX.next(this.movement);
+  }
+
+  static controlMoveRight() {
+    GraphSchematicsManager.offsetControlX.next(-this.movement);
+  }
+
+  static onChangeX() {
+    return GraphSchematicsManager.offsetControlX;
+  }
+
+  static onChangeY() {
+    return GraphSchematicsManager.offsetControlY;
+  }
+
+  static onOffsetCenter() {
+    return GraphSchematicsManager.offsetCenter;
+  }
 
   static addVertex(data: any) {
     GraphSchematicsManager.addVertexSubject.next(data);
@@ -88,6 +126,8 @@ export default class GraphSchematicsManager {
     GraphSchematicsManager.deleteEdgeSubject.unsubscribe();
     GraphSchematicsManager.selectedVertexObjectSubject.unsubscribe();
     GraphSchematicsManager.isPlayingSubject.unsubscribe();
+    GraphSchematicsManager.offsetControlX.unsubscribe();
+    GraphSchematicsManager.offsetControlY.unsubscribe();
   }
 
 }
