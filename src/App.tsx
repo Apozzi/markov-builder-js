@@ -4,6 +4,8 @@ import NavBar from './components/NavBar/NavBar'
 import ToolBox from './components/ToolBox/ToolBox'
 import './App.css'
 import GraphSchematics from './components/GraphSchematics/GraphSchematics';
+import DataBar from './components/DataBar/DataBar';
+import GraphSchematicsManager from './components/GraphSchematics/GraphSchematicsManager';
 
 export default class App extends React.Component {
   state = {
@@ -12,6 +14,7 @@ export default class App extends React.Component {
 
   onChangePlayState = (state: boolean) => {
     this.setState({ isPlaying: state });
+    GraphSchematicsManager.setPlayOrStop(state);
   }
 
   onKeyPressed(event: any) {
@@ -34,6 +37,7 @@ export default class App extends React.Component {
           <div className='control-botton'>▼</div>
         </div>
         <GraphSchematics></GraphSchematics>
+        <DataBar></DataBar>
       </div>
     );
   }

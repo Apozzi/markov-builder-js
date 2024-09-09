@@ -46,6 +46,8 @@ export default class GraphSchematics extends React.Component<{}, {
   edgeCreationMode: boolean,
   edgeStartVertex: number | null,
   edgeWeights: EdgeWeights;
+  actualVertex: number | null,
+  audioContext: AudioContext | null;
 }> {
 
   constructor(props: any) {
@@ -64,6 +66,8 @@ export default class GraphSchematics extends React.Component<{}, {
       edgeCreationMode: false,
       edgeStartVertex: null,
       edgeWeights: {},
+      actualVertex: null,
+      audioContext: null,
     };
     this.isDragging = false;
     this.startX = 0;
@@ -72,12 +76,111 @@ export default class GraphSchematics extends React.Component<{}, {
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    this.setState({ audioContext });
     if (!mounted) {
       GraphSchematicsManager.onAddVertex().subscribe((data:any) => this.addVertex(data.x, data.y, data.label));
       GraphSchematicsManager.edgeCreationMode().subscribe(() => this.toggleEdgeCreationMode());
+      GraphSchematicsManager.onChangeVertex().subscribe((data:any) => {
+        this.setState({
+          vertices: this.state.vertices.map(vertice => {
+            if (vertice.id === data.id) {
+              return {
+                ...vertice,
+                label: data.label
+              }
+            }
+            return vertice
+          })
+        });
+        GraphSchematicsManager.changeVerticeArray(this.state.vertices);
+      });
+      GraphSchematicsManager.onDeleteEdge().subscribe((edge:any) => {
+        this.setState((prevState:any) => {
+          if (prevState.edgeWeights[edge.source])
+            delete prevState.edgeWeights[edge.source][edge.target];
+          if (prevState.edgeWeights[edge.source] !== undefined 
+            && Object.keys(prevState.edgeWeights[edge.source]).length === 0) 
+            delete prevState.edgeWeights[edge.source];
+          const newEdgeWeights = this.redistributeWeights(prevState.edgeWeights, edge.source, -1);
+          return{
+            edges: this.state.edges.filter(e => e.source !== edge.source || e.target !== edge.target),
+            edgeWeights: newEdgeWeights
+          }});
+      });
+      let timer : number;
+      GraphSchematicsManager.isPlaying().subscribe((state:any) => {
+        const { vertices, actualVertex} = this.state;
+        if (vertices.length === 0) return;
+        if (state) {
+          if (actualVertex === null) {
+            this.setState({ actualVertex: vertices[0].id });
+            this.playBeep();
+          }
+          if (actualVertex === null) {
+            this.setState({actualVertex: vertices[0].id});
+          }
+          timer = setInterval(() => {
+            this.moveToNextVertex();
+          }, 500);
+        } else {
+          clearInterval(timer);
+        }
+      })
     }
     mounted = true;
   }
+
+  moveToNextVertex = () => {
+    const { actualVertex, edges, edgeWeights } = this.state;
+    if (actualVertex === null) return;
+
+    const possibleEdges = edges.filter(edge => edge.source === actualVertex);
+    if (possibleEdges.length === 0) return;
+
+    const totalWeight = possibleEdges.reduce((sum, edge) => {
+      return sum + (edgeWeights[edge.source]?.[edge.target] || 0);
+    }, 0);
+
+    const randomValue = Math.random() * totalWeight;
+    let accumulatedWeight = 0;
+    let nextVertex = null;
+
+    for (const edge of possibleEdges) {
+      accumulatedWeight += edgeWeights[edge.source]?.[edge.target] || 0;
+      if (randomValue <= accumulatedWeight) {
+        nextVertex = edge.target;
+        break;
+      }
+    }
+
+    if (nextVertex !== null) {
+      this.setState({ actualVertex: nextVertex }, () => {
+        this.playBeep();
+      });
+    }
+  };
+
+  playBeep = () => {
+    const { audioContext } = this.state;
+    if (!audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // 440 Hz - A4 note
+
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.01);
+    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.1);
+  };
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
@@ -90,6 +193,13 @@ export default class GraphSchematics extends React.Component<{}, {
     });
   };
 
+  private selectedVertex(vertexId:any) {
+    GraphSchematicsManager.vertexSelected(vertexId ? {
+      ...this.state.vertices.find((v) => v.id === vertexId),
+      edges: this.state.edges.filter(e => e.source === vertexId)
+    } : null);
+  }
+
   handleVertexMouseDown = (event: React.MouseEvent, id: number) => {
     if (this.state.edgeCreationMode) {
       if (this.state.edgeStartVertex === null) {
@@ -101,6 +211,7 @@ export default class GraphSchematics extends React.Component<{}, {
       }
     } else {
       this.setState({ draggingVertex: true, selectedVertex: id });
+      this.selectedVertex(id);
       this.startX = event.clientX;
       this.startY = event.clientY;
     }
@@ -112,6 +223,7 @@ export default class GraphSchematics extends React.Component<{}, {
   
     if (selectedVertex !== null && target.tagName !== 'circle' && target.tagName !== 'rect' && target.tagName !== 'text') {
       this.setState({ selectedVertex: null });
+      this.selectedVertex(null);
     }
   
     if (!this.state.edgeCreationMode) {
@@ -152,6 +264,7 @@ export default class GraphSchematics extends React.Component<{}, {
         );
   
         this.setState({ vertices: updatedVertices });
+        GraphSchematicsManager.changeVerticeArray(this.state.vertices);
   
         this.startX = event.clientX;
         this.startY = event.clientY;
@@ -201,6 +314,7 @@ export default class GraphSchematics extends React.Component<{}, {
       this.setState(prevState => ({
         vertices: [...prevState.vertices, { id: nextVertexId, x: newX, y: newY, label }]
       }));
+      GraphSchematicsManager.changeVerticeArray(this.state.vertices);
     } else {
       AlphabetIterator.subIndex();
       console.log("Cannot add vertex: Overlapping with an existing vertex");
@@ -226,7 +340,7 @@ export default class GraphSchematics extends React.Component<{}, {
     }
     
     const sourceWeights = newWeights[sourceId];
-    const isNewEdge = sourceWeights[targetId] === undefined;
+    const isNewEdge = sourceWeights[targetId] === undefined && targetId !== -1;
     const totalEdges = isNewEdge ? Object.keys(sourceWeights).length + 1 : Object.keys(sourceWeights).length;
     const newWeight = 1 / totalEdges;
     
@@ -283,7 +397,7 @@ export default class GraphSchematics extends React.Component<{}, {
   }
 
   renderVertices() {
-    const { vertices, scale, selectedVertex } = this.state;
+    const { vertices, scale, selectedVertex, actualVertex} = this.state;
   
     return vertices.map((vertex) => (
       <g key={vertex.id} transform={`translate(${vertex.x * scale},${vertex.y * scale})`} onMouseDown={(event) => this.handleVertexMouseDown(event, vertex.id)}>
@@ -311,7 +425,18 @@ export default class GraphSchematics extends React.Component<{}, {
             </g>
           </>
         )}
-        <circle cx={0} cy={0} r={vertexRadius} fill="#21171c" />
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feFlood floodColor="#ff6666" result="glowColor" />
+            <feComposite in="glowColor" in2="blur" operator="in" result="glow" />
+            <feMerge>
+              <feMergeNode in="glow" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <circle cx={0} cy={0} r={vertexRadius} fill={actualVertex === vertex.id ? "#5b3146" : "#21171c"} filter={actualVertex === vertex.id ? "url(#glow)" : ''}/>
         <text x={0} y={9} textAnchor="middle" fill="white" fontSize={30}>{vertex.label}</text>
       </g>
     ));
