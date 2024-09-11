@@ -67,4 +67,8 @@
 
 .subnav--content:hover .subnav--subitem {
     display: grid !important;
-} 
+}
+
+.file-input-label {
+    cursor: pointer;
+}

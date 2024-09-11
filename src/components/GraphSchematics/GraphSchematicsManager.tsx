@@ -1,9 +1,11 @@
-import { Subject } from "rxjs";
+import { Subject, take } from "rxjs";
+import AlphabetIterator from "../../utils/AlphabetIterator";
 
 export default class GraphSchematicsManager {
 
   private static movement = 100;
   private static isEdgeCreationMode = false;
+  private static savedState = {};
 
   private static addVertexSubject = new Subject();
   private static changeVertexSubject = new Subject();
@@ -13,10 +15,17 @@ export default class GraphSchematicsManager {
   private static selectedVertexObjectSubject = new Subject();
   private static changeVerticeArraySubject = new Subject();
   private static isPlayingSubject = new Subject();
+  private static resetAllSubject = new Subject();
+  private static loadStateSubject = new Subject<any>();
 
   private static offsetControlX = new Subject();
   private static offsetControlY = new Subject();
   private static offsetCenter = new Subject();
+
+  static resetAll() {
+    GraphSchematicsManager.resetAllSubject.next({});
+    AlphabetIterator.reload
+  }
 
   static controlToCenter() {
     GraphSchematicsManager.offsetCenter.next({});
@@ -108,6 +117,10 @@ export default class GraphSchematicsManager {
     return GraphSchematicsManager.deleteEdgeSubject;
   }
 
+  static onResetAll() {
+    return GraphSchematicsManager.resetAllSubject;
+  }
+
   static edgeCreationMode() {
     return GraphSchematicsManager.edgeCreationModeSubject;
   }
@@ -119,12 +132,29 @@ export default class GraphSchematicsManager {
     return GraphSchematicsManager.isPlayingSubject;
   }
 
+  static getGraphState() {
+    return this.savedState;
+  }
+
+  static setGraphState(state: any) {
+    this.savedState = state;
+  }
+
+  static loadGraphState(state: any) {
+    GraphSchematicsManager.loadStateSubject.next(state);
+  }
+
+  static onLoadGraphState() {
+    return GraphSchematicsManager.loadStateSubject;
+  }
+
   static unsubcribeSubjects() {
     GraphSchematicsManager.addVertexSubject.unsubscribe();
     GraphSchematicsManager.edgeCreationModeSubject.unsubscribe();
     GraphSchematicsManager.edgeCreationModeSubject.unsubscribe();
     GraphSchematicsManager.deleteEdgeSubject.unsubscribe();
     GraphSchematicsManager.selectedVertexObjectSubject.unsubscribe();
+    GraphSchematicsManager.loadStateSubject.unsubscribe();
     GraphSchematicsManager.isPlayingSubject.unsubscribe();
     GraphSchematicsManager.offsetControlX.unsubscribe();
     GraphSchematicsManager.offsetControlY.unsubscribe();

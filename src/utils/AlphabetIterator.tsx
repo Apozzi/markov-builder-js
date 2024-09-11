@@ -1,5 +1,9 @@
 export default class AlphabetIterator {
     private static currentIndex: number = 0;
+
+    static reload() {
+        this.currentIndex = 0;
+    }
   
     static getNextLetter(): string {
         const letter = String.fromCharCode(65 + this.currentIndex);

@@ -11,6 +11,23 @@ const maxZoom = 2.5;
 const vertexRadius = 40;
 const selectionBorderSize = 20
 const minDistance = vertexRadius * 2 + selectionBorderSize;
+const initState = {
+  offsetX: 0,
+  offsetY: 0,
+  width: window.innerWidth - offsetWidth,
+  height: window.innerHeight,
+  scale: 1,
+  vertices: [],
+  edges: [],
+  selectedVertex: null,
+  draggingVertex: false,
+  edgeCreationMode: false,
+  edgeStartVertex: null,
+  edgeWeights: {},
+  actualVertex: null,
+  audioContext: null,
+  vertexHistory: [],
+};
 
 interface Vertex {
   id: number;
@@ -54,27 +71,10 @@ export default class GraphSchematics extends React.Component<{}, {
 
   constructor(props: any) {
     super(props);
-    
-    this.state = {
-      offsetX: 0,
-      offsetY: 0,
-      width: window.innerWidth - offsetWidth,
-      height: window.innerHeight,
-      scale: 1,
-      vertices: [],
-      edges: [],
-      selectedVertex: null,
-      draggingVertex: false,
-      edgeCreationMode: false,
-      edgeStartVertex: null,
-      edgeWeights: {},
-      actualVertex: null,
-      audioContext: null,
-      vertexHistory: [],
-    };
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
+    this.state = initState;
   }
 
   componentDidMount() {
@@ -145,6 +145,15 @@ export default class GraphSchematics extends React.Component<{}, {
       GraphSchematicsManager.onOffsetCenter().subscribe(() => {
         this.setState({offsetY: 0, offsetX: 0});
       });
+
+      GraphSchematicsManager.onResetAll().subscribe(() => {
+        this.setState(initState);
+        GraphSchematicsManager.setGraphState(this.state);
+      });
+      GraphSchematicsManager.onLoadGraphState().subscribe((state: any) => {
+        this.setState(state);
+        GraphSchematicsManager.setGraphState(this.state);
+      });
     }
     mounted = true;
   }
@@ -186,6 +195,7 @@ export default class GraphSchematics extends React.Component<{}, {
       }, () => {
         this.playBeep();
       });
+      GraphSchematicsManager.setGraphState(this.state);
     }
   };
 
@@ -243,6 +253,7 @@ export default class GraphSchematics extends React.Component<{}, {
       this.startX = event.clientX;
       this.startY = event.clientY;
     }
+    GraphSchematicsManager.setGraphState(this.state);
   };
 
   handleMouseDown = (event: React.MouseEvent) => {
@@ -259,6 +270,7 @@ export default class GraphSchematics extends React.Component<{}, {
       this.startX = event.clientX;
       this.startY = event.clientY;
     }
+    GraphSchematicsManager.setGraphState(this.state);
   };
 
   handleMouseMove = (event: React.MouseEvent) => {
@@ -309,6 +321,7 @@ export default class GraphSchematics extends React.Component<{}, {
       this.startX = event.clientX;
       this.startY = event.clientY;
     }
+    GraphSchematicsManager.setGraphState(this.state);
   };
 
   handleMouseUp = () => {
@@ -347,6 +360,7 @@ export default class GraphSchematics extends React.Component<{}, {
       AlphabetIterator.subIndex();
       console.log("Cannot add vertex: Overlapping with an existing vertex");
     }
+    GraphSchematicsManager.setGraphState(this.state);
   };
 
   addEdge = (sourceId: number, targetId: number) => {
@@ -359,6 +373,7 @@ export default class GraphSchematics extends React.Component<{}, {
         edgeWeights: newEdgeWeights
       };
     });
+    GraphSchematicsManager.setGraphState(this.state);
   };
 
   redistributeWeights = (currentWeights: EdgeWeights, sourceId: number, targetId: number): EdgeWeights => {
@@ -401,6 +416,7 @@ export default class GraphSchematics extends React.Component<{}, {
         selectedVertex: null
       };
     });
+    GraphSchematicsManager.setGraphState(this.state);
   };
 
   renderGrid() {
@@ -604,6 +620,7 @@ export default class GraphSchematics extends React.Component<{}, {
       
       return { edgeWeights: newWeights };
     });
+    GraphSchematicsManager.setGraphState(this.state);
   };
   
 
