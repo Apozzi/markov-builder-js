@@ -151,7 +151,10 @@ export default class GraphSchematics extends React.Component<{}, {
         GraphSchematicsManager.setGraphState(this.state);
       });
       GraphSchematicsManager.onLoadGraphState().subscribe((state: any) => {
-        this.setState(state);
+        this.setState({
+          ...state,
+          audioContext
+        });
         GraphSchematicsManager.setGraphState(this.state);
       });
     }

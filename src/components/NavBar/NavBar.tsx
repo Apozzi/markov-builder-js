@@ -40,6 +40,22 @@ export default class NavBar extends React.Component<any> {
     }
   };
 
+  openExamplePeriodic = () => {
+    GraphSchematicsManager.loadGraphState({});
+  };
+
+  openExampleCounter = () => {
+    GraphSchematicsManager.loadGraphState({"offsetX":-1,"offsetY":-1,"width":1724,"height":1000,"scale":1,"vertices":[{"id":1,"x":662,"y":192,"label":"A","visitCount":0},{"id":2,"x":917,"y":191,"label":"B","visitCount":0},{"id":3,"x":1012,"y":424,"label":"C","visitCount":0},{"id":4,"x":799,"y":591,"label":"D","visitCount":0},{"id":5,"x":578,"y":425,"label":"E","visitCount":0}],"edges":[{"source":1,"target":2},{"source":2,"target":3},{"source":3,"target":4},{"source":4,"target":5},{"source":5,"target":1}],"selectedVertex":null,"draggingVertex":false,"edgeCreationMode":false,"edgeStartVertex":null,"edgeWeights":{"1":{"2":1},"2":{"3":1},"3":{"4":1},"4":{"5":1},"5":{"1":1}},"actualVertex":null,"audioContext":{},"vertexHistory":[]});
+  };
+
+  openExampleTwoCommunicationClasses = () => {
+    GraphSchematicsManager.loadGraphState({});
+  };
+
+  openExampleTwoClassesWithSmallJump = () => {
+    GraphSchematicsManager.loadGraphState({});
+  };
+
   render() {
     return (
       <div className="navbar">
@@ -71,10 +87,10 @@ export default class NavBar extends React.Component<any> {
             <div className="navbar--arrow-icon">▼</div> Exemplos
           </div>
           <div className="subnav--content">
-            <a>Periódico</a>
-            <a>Contador</a>
-            <a>Duas classes de Comunicação</a>
-            <a>Duas classes com Pulo</a>
+            <a onClick={() => this.openExamplePeriodic()}>Periódico</a>
+            <a onClick={() => this.openExampleCounter()}>Contador</a>
+            <a onClick={() => this.openExampleTwoCommunicationClasses()}>Duas classes de Comunicação</a>
+            <a onClick={() => this.openExampleTwoClassesWithSmallJump()}>Duas classes com Pulo</a>
           </div>
         </div>
 
