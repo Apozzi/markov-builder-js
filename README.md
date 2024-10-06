@@ -15,5 +15,5 @@ To run app locally just run `npm run dev`.
 
 ## Author
 
-Anderson Pozzi (2021).
+Anderson Pozzi (2024).
 
