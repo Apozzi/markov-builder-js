@@ -10,12 +10,18 @@
     transform: translateX(235px);
     background: transparent;
     border: solid 2px transparent;
+    z-index: 21;
+    pointer-events: none;
 }
 
 .databar-show {
     transform: translateX(0px);
     background-color: #584b4f;
     border: solid 2px #453138;
+}
+
+.databar-cancel-events {
+    pointer-events: none;
 }
 
 .databar-topbar--icon {
@@ -42,6 +48,8 @@ h3, h4 {
 .databar-content {
     padding-left: 60px;
     padding-right: 60px;
+    pointer-events: all;
+    height: 0;
 }
 
 .vertex-info {
@@ -87,6 +95,7 @@ ul > li
     height: 50px;
     background-color: #453138;
     border-radius: 7px;
+    pointer-events: all;
 }
 
 .databar-topbar-show {

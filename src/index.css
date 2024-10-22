@@ -14,7 +14,6 @@ code {
 }
 
 
-
 .default-button {
   padding: 11px 24px;
   background: #217cda;
@@ -162,3 +161,102 @@ code {
 .control-right:hover {color: #c1b1b7;}
 .control-bottom:hover {color: #c1b1b7;}
 .control-center:hover {background-color: #6d6366;}
+
+.button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.confirmation-button:hover{
+  background-color: #037d50;
+}
+
+.cancel-button {
+  background-color: #aa040e;
+}
+
+.cancel-button:hover {
+  background-color: #6f030a;
+}
+
+.next-button {
+  background-color: #0467aa;
+}
+
+.next-button:hover {
+  background-color: #04446f;
+}
+
+.sound-info-label {
+  font-size: 14px;
+  color: #ddd;
+}
+
+.sound-info-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.sound-info-label input[type="checkbox"] {
+  display: none;
+}
+
+.sound-info-label .switch {
+  position: relative;
+  width: 45px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+.sound-info-label .switch::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.sound-info-label input[type="checkbox"]:checked + .switch {
+  background-color: #4caf50;
+}
+
+.sound-info-label input[type="checkbox"]:checked + .switch::before {
+  transform: translateX(21px);
+}
+
+.sound-info-label .switch:hover {
+  background-color: #b3b3b3;
+}
+
+.sound-info-label .switch:active::before {
+  width: 22px;
+}
+
+.switch-text {
+  margin-right: 20px;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+
+.pad-15 {
+  padding: 15px;
+}

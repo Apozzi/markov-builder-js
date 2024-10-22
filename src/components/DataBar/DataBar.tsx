@@ -11,12 +11,14 @@ export default class DataBar extends React.Component<any> {
     selectedVertex: {
       id: 0,
       label: '',
-      visitCount: 0
+      visitCount: 0,
+      sound: { value: '', type: 'note'}
     },
     edges: [],
     vertices: [],
     vertexVisitCount: 0,
-    isNotVisible: true 
+    isNotVisible: true, 
+    showMusicalNote: false
   };
 
   componentDidMount() {
@@ -38,7 +40,8 @@ export default class DataBar extends React.Component<any> {
         const newSelectedVertex = vertices.find((vertex:any) => vertex.id === selectedVertex.id)
         this.setState({vertices, selectedVertex: newSelectedVertex ? newSelectedVertex : selectedVertex });
         this.forceUpdate();
-      })
+      });
+      GraphSchematicsManager.onChangeSongInfo().subscribe((status:boolean) => this.setState({showMusicalNote: status}));
   }
 
   toggleVisibility = () => {
@@ -84,7 +87,7 @@ export default class DataBar extends React.Component<any> {
             onClick={this.toggleVisibility} 
           />
         </div>
-        <div className='databar-content'>
+        <div className={`databar-content ${isNotVisible ? 'databar-cancel-events' : ''}`}>
           <h3>Vértice</h3>
           <select className='databar--select' value={selectedVertex.label} onChange={this.handleVertexChange}>
             {Array.from({ length: 26 }, (_, i) => {
@@ -116,6 +119,12 @@ export default class DataBar extends React.Component<any> {
             <h4>Quant. de vezes que passou nesse vértice:</h4>
             <span className="vertex-count">{selectedVertex.visitCount}</span>
           </div>
+
+
+          {this.state.showMusicalNote ? <div className="vertex-info">
+            <h4>Nota Músical da Vertice:</h4>
+            <span className="vertex-count">{selectedVertex.sound.type === 'note' ? selectedVertex.sound.value : '-'}</span>
+          </div> : ''}
         </div>
       </div>
     )

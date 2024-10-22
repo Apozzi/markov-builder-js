@@ -1,8 +1,8 @@
 .App {
   text-align: center;
-  position: fixed;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 .App-logo {
@@ -45,7 +45,7 @@
 }
 
 .modal-header {
-  background: #4b4f58;
+  background: #413438;
   padding: 16px;
   display: flow-root;
 }

@@ -1,6 +1,10 @@
 import React from 'react';
 import './NavBar.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
+import DetailsViewModal from '../DetailsViewModal/DetailsViewModal';
+import AboutViewModal from '../AboutViewModal/AboutViewModal';
+import CustomVerticeSongViewModal from '../CustomVerticeSongViewModal/CustomVerticeSongViewModal';
+import ConfigurationViewModal from '../ConfigurationViewModal/ConfigurationViewModal';
 
 
 export default class NavBar extends React.Component<any> {
@@ -59,7 +63,10 @@ export default class NavBar extends React.Component<any> {
   render() {
     return (
       <div className="navbar">
-
+        <DetailsViewModal></DetailsViewModal>
+        <CustomVerticeSongViewModal></CustomVerticeSongViewModal>
+        <ConfigurationViewModal></ConfigurationViewModal>
+        <AboutViewModal></AboutViewModal>
         <div className="navbar--button" onClick={() => GraphSchematicsManager.resetAll()}>
           Limpar
         </div>
@@ -104,8 +111,19 @@ export default class NavBar extends React.Component<any> {
           </div>
         </div>
 
-        <div className="navbar--button">
-          Detalhes
+        <div className="navbar--button-with-subnav">
+          <div className="navbar--button">
+            <div className="navbar--arrow-icon">▼</div> Detalhes
+          </div>
+          <div className="subnav--content">
+            <a onClick={() => DetailsViewModal.openModal({})}>Matrix de Transição</a>
+            <a onClick={() => CustomVerticeSongViewModal.openModal({})}> Customização de Sons</a>
+            <a onClick={() => ConfigurationViewModal.openModal({})}> Configurações</a>
+          </div>
+        </div>
+
+        <div className="navbar--button" onClick={() => AboutViewModal.openModal({})}>
+          Sobre
         </div>
       </div>
     )

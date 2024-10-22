@@ -4,6 +4,11 @@ import GraphSchematicsManager from './GraphSchematicsManager';
 import AlphabetIterator from '../../utils/AlphabetIterator';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import SimulatorUtils from '../../utils/SimulatorUtils';
+import { NotaMusical, NOTE_FREQUENCIES } from '../../utils/NotasMusicaisEnum';
+import { AudioManager } from '../../utils/AudioManager';
+
+const debugMode = false;
 
 const offsetWidth = 180;
 const minZoom = 0.5;
@@ -35,6 +40,10 @@ interface Vertex {
   y: number;
   label: string;
   visitCount: number;
+  sound?: {
+    type: 'note' | 'custom';
+    value: NotaMusical | string;
+  };
 }
 
 interface Edge {
@@ -67,21 +76,37 @@ export default class GraphSchematics extends React.Component<{}, {
   actualVertex: number | null,
   audioContext: AudioContext | null;
   vertexHistory: number[];
+  centroid: Vertex | null;
+  centroidUpdateCounter: number;
+  config: any
 }> {
+  audioManager: AudioManager;
+  private centroidUpdateTimer: any = null;
 
   constructor(props: any) {
     super(props);
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
-    this.state = initState;
+    this.state = {
+      ...initState,
+      centroid: null,
+      centroidUpdateCounter: 0,
+      audioContext: new AudioContext(),
+      config: {
+        speed: 1
+      }
+    };
+    this.audioManager = new AudioManager(this.state.audioContext as AudioContext);
   }
 
   componentDidMount() {
+
     window.addEventListener('resize', this.handleResize);
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     this.setState({ audioContext });
     if (!mounted) {
+      this.updateCentroid();
       GraphSchematicsManager.onAddVertex().subscribe((data:any) => this.addVertex(data.x, data.y, data.label));
       GraphSchematicsManager.edgeCreationMode().subscribe(() => this.toggleEdgeCreationMode());
       GraphSchematicsManager.onChangeVertex().subscribe((data:any) => {
@@ -112,24 +137,26 @@ export default class GraphSchematics extends React.Component<{}, {
           }});
       });
       let timer : number;
-      GraphSchematicsManager.isPlaying().subscribe((state:any) => {
-        const { vertices, actualVertex} = this.state;
+      GraphSchematicsManager.isPlaying().subscribe(async (state:any) => {
+        const { vertices, actualVertex, config } = this.state;
         if (vertices.length === 0) return;
+
         if (state) {
           if (actualVertex === null) {
-            const initialVertex = vertices[0].id;
+            const initialVertex = vertices.reduce((minVertex: any, currentVertex: any) => {
+              return currentVertex.label < minVertex.label ? currentVertex : minVertex;
+            }, vertices[0]).id;
             this.setState({ 
               actualVertex: initialVertex,
               vertexHistory: [initialVertex]
+            }, () => {
+              const currentVertex = vertices[0];
+              this.playVertexSound(currentVertex);
             });
-            this.playBeep();
           }
-          if (actualVertex === null) {
-            this.setState({actualVertex: vertices[0].id});
-          }
-          timer = setInterval(() => {
+          timer = window.setInterval(() => {
             this.moveToNextVertex();
-          }, 500);
+          }, 500 * (1 / config.speed));
         } else {
           clearInterval(timer);
         }
@@ -157,6 +184,19 @@ export default class GraphSchematics extends React.Component<{}, {
         });
         GraphSchematicsManager.setGraphState(this.state);
       });
+      GraphSchematicsManager.onExternalUpdateVerticesEdges().subscribe((verticesAndEdges: any) => {
+        if (verticesAndEdges.edges) {
+          this.setState({
+            vertices: verticesAndEdges.vertices,
+            edges: verticesAndEdges.edges,
+            edgeWeights: verticesAndEdges.edgeWeights
+          });
+        } else {
+          this.setState({vertices: verticesAndEdges.vertices});
+        }
+        this.forceUpdate();
+      });
+      GraphSchematicsManager.onChangeConfig().subscribe((config: any) => this.setState({config}));
     }
     mounted = true;
   }
@@ -195,36 +235,57 @@ export default class GraphSchematics extends React.Component<{}, {
           vertexHistory: [...prevState.vertexHistory, nextVertex],
           vertices: updatedVertices
         };
-      }, () => {
-        this.playBeep();
+      }, async () => {
+        const currentVertex = this.state.vertices.find(v => v.id === nextVertex);
+        if (currentVertex) {
+          await this.playVertexSound(currentVertex);
+        }
       });
       GraphSchematicsManager.setGraphState(this.state);
     }
   };
 
-  playBeep = () => {
-    const { audioContext } = this.state;
-    if (!audioContext) return;
 
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+  playVertexSound = async (vertex: Vertex) => {
+    if (!vertex.sound) {
+      this.audioManager.playNote(440);
+      return;
+    }
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    try {
+      if (vertex.sound.type === 'note') {
+        const frequency = NOTE_FREQUENCIES[vertex.sound.value as NotaMusical];
+        this.audioManager.playNote(frequency);
+      } else {
+        const url = vertex.sound.value as string;
+        if (!url) return;
 
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // 440 Hz - A4 note
-
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.01);
-    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
-
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
+        const buffer = await this.audioManager.loadAudio(url);
+        this.audioManager.playBuffer(buffer);
+      }
+    } catch (error) {
+      console.error('Error playing sound:', error);
+      this.audioManager.playNote(440);
+    }
   };
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    if (this.centroidUpdateTimer) {
+      clearTimeout(this.centroidUpdateTimer);
+    }
+  }
+
+  debouncedUpdateCentroid = () => {
+    if (this.centroidUpdateTimer) {
+      clearTimeout(this.centroidUpdateTimer);
+    }
+
+    this.centroidUpdateTimer = setTimeout(() => {
+      this.setState(prevState => ({
+        centroidUpdateCounter: prevState.centroidUpdateCounter + 1
+      }), this.updateCentroid);
+    }, 200);
   }
 
   handleResize = () => {
@@ -355,10 +416,12 @@ export default class GraphSchematics extends React.Component<{}, {
   
     if (!isOverlapping) {
       nextVertexId +=1;
-      this.setState(prevState => ({
-        vertices: [...prevState.vertices, { id: nextVertexId, x: newX, y: newY, label, visitCount: 0 }]
-      }));
-      GraphSchematicsManager.changeVerticeArray(this.state.vertices);
+      this.setState((prevState: any) => {
+        const newState = [...prevState.vertices, { id: nextVertexId, x: newX, y: newY, label, visitCount: 0, sound: {type: 'note', value: NotaMusical.LA} }]
+        GraphSchematicsManager.changeVerticeArray(newState);
+        return {
+        vertices: newState
+      }});
     } else {
       AlphabetIterator.subIndex();
       console.log("Cannot add vertex: Overlapping with an existing vertex");
@@ -502,15 +565,15 @@ export default class GraphSchematics extends React.Component<{}, {
       } else {
         const dual = edges.find(edge => target.id === edge.source && source.id === edge.target);
         if (!dual) {
-          return this.renderNormalEdge(source, target, index, scale, 0.1, 0.04);
+          return this.renderNormalEdge(source, target, index, scale, 0.1, 0.04, false);
         } else {
-          return this.renderNormalEdge(source, target, index, scale, 0.3, 0.1);
+          return this.renderNormalEdge(source, target, index, scale, 0.3, 0.1, true);
         }
       }
     });
   }
 
-  renderNormalEdge(source: Vertex, target: Vertex, index: number, scale: number, angleAdjustment:number, curvature:number) {
+  renderNormalEdge(source: Vertex, target: Vertex, index: number, scale: number, angleAdjustment:number, curvature:number, variableCurvature: boolean) {
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     
@@ -524,9 +587,18 @@ export default class GraphSchematics extends React.Component<{}, {
     
     const midX = (sourceX + targetX) / 2;
     const midY = (sourceY + targetY) / 2;
+
+    const { centroid } = this.state;
+
+    const directionX = centroid ? midX - centroid.x  : 0;
+    const directionY = centroid ? midY - centroid.y : 0;
+
+    const curvatureSign = !variableCurvature && (directionX * dy - directionY * dx > 0) ? -1 : 1;
+
+    const adjustedCurvature = curvature * curvatureSign;
     
-    const controlX = midX - (targetY - sourceY) * curvature;
-    const controlY = midY + (targetX - sourceX) * curvature;
+    const controlX = midX - (targetY - sourceY) * adjustedCurvature;
+    const controlY = midY + (targetX - sourceX) * adjustedCurvature;
 
     const path = `M ${sourceX * scale} ${sourceY * scale} Q ${controlX * scale} ${controlY * scale} ${targetX * scale} ${targetY * scale}`;
 
@@ -625,6 +697,20 @@ export default class GraphSchematics extends React.Component<{}, {
     });
     GraphSchematicsManager.setGraphState(this.state);
   };
+
+  updateCentroid = () => {
+    let centroidVertex = null;
+    try {
+      centroidVertex = SimulatorUtils.calculateCentroidVertex(this.state.vertices);
+    } catch {}
+    this.setState({ centroid: centroidVertex });
+  }
+
+  componentDidUpdate(prevProps: {}, prevState: any) {
+    if (prevState.vertices !== this.state.vertices) {
+      this.debouncedUpdateCentroid();
+    }
+  }
   
 
   renderSelfLoop(vertex: Vertex, index: number, scale: number) {
@@ -702,6 +788,20 @@ export default class GraphSchematics extends React.Component<{}, {
     );
   }
 
+  renderCentroid() {
+    const { centroid, scale } = this.state;
+    if (!centroid) return null;
+
+    return (
+      <circle
+        cx={centroid.x * scale}
+        cy={centroid.y * scale}
+        r={5}
+        fill="red"
+      />
+    );
+  }
+
 
   render() {
     const { width, height, edgeCreationMode } = this.state;
@@ -720,6 +820,7 @@ export default class GraphSchematics extends React.Component<{}, {
             {this.renderGrid()}
             {this.renderEdges()}
             {this.renderVertices()}
+            {debugMode ? this.renderCentroid() : null}
           </g>
         </svg>
       </div>

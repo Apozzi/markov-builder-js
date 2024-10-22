@@ -1,0 +1,29 @@
+.overlay {
+    position: fixed;
+    inset: 0px;
+    background-color: rgb(16 14 14 / 85%);
+    z-index: 20;
+}
+
+div {
+    color: white;
+}
+
+.modal-content-extra {
+    padding-left: 60px;
+    padding-top: 5px;
+}
+
+.matrix-input {
+    background: #3f3639;
+    border: none;
+    padding: 13px;
+    font-size: 14px;
+    border-radius: 10px;
+    margin: 10px;
+    color:white;
+}
+
+.transition-matrix {
+    margin-bottom: 50px;
+}

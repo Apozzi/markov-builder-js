@@ -14,9 +14,14 @@ export default class GraphSchematicsManager {
   private static exitCreationModeSubject = new Subject();
   private static selectedVertexObjectSubject = new Subject();
   private static changeVerticeArraySubject = new Subject();
+  private static changeStateSubject = new Subject();
   private static isPlayingSubject = new Subject();
   private static resetAllSubject = new Subject();
   private static loadStateSubject = new Subject<any>();
+  private static updateVerticeAndEdgesSubject = new Subject<any>();
+
+  private static onActivateSongInfo = new Subject<any>();
+  private static onChangeConfigSubject = new Subject<any>();
 
   private static offsetControlX = new Subject();
   private static offsetControlY = new Subject();
@@ -24,7 +29,7 @@ export default class GraphSchematicsManager {
 
   static resetAll() {
     GraphSchematicsManager.resetAllSubject.next({});
-    AlphabetIterator.reload
+    AlphabetIterator.reload();
   }
 
   static controlToCenter() {
@@ -137,6 +142,7 @@ export default class GraphSchematicsManager {
   }
 
   static setGraphState(state: any) {
+    GraphSchematicsManager.changeStateSubject.next(state);
     this.savedState = state;
   }
 
@@ -144,8 +150,44 @@ export default class GraphSchematicsManager {
     GraphSchematicsManager.loadStateSubject.next(state);
   }
 
+  static setConfig(config: any) {
+    GraphSchematicsManager.onChangeConfigSubject.next(config);
+  }
+
+  static onChangeConfig() {
+    return GraphSchematicsManager.onChangeConfigSubject;
+  }
+
+  static updateVertices(vertices: any) {
+    GraphSchematicsManager.updateVerticeAndEdgesSubject.next({vertices});
+  }
+
+  static updateVerticesEdges(vertices: any, edges: any, edgeWeights: any) {
+    GraphSchematicsManager.updateVerticeAndEdgesSubject.next({
+      vertices,
+      edges,
+      edgeWeights
+    });
+  }
+
+  static onExternalUpdateVerticesEdges() {
+    return GraphSchematicsManager.updateVerticeAndEdgesSubject;
+  }
+
   static onLoadGraphState() {
     return GraphSchematicsManager.loadStateSubject;
+  }
+
+  static onChangeGraphState() {
+    return GraphSchematicsManager.changeStateSubject;
+  }
+
+  static toggleSongInfo(status: boolean) {
+    GraphSchematicsManager.onActivateSongInfo.next(status);
+  }
+
+  static onChangeSongInfo() {
+    return GraphSchematicsManager.onActivateSongInfo;
   }
 
   static unsubcribeSubjects() {
@@ -158,6 +200,8 @@ export default class GraphSchematicsManager {
     GraphSchematicsManager.isPlayingSubject.unsubscribe();
     GraphSchematicsManager.offsetControlX.unsubscribe();
     GraphSchematicsManager.offsetControlY.unsubscribe();
+    GraphSchematicsManager.changeStateSubject.unsubscribe();
+    GraphSchematicsManager.updateVerticeAndEdgesSubject.unsubscribe();
   }
 
 }

@@ -4,6 +4,7 @@ import './ToolBox.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartSimple } from '@fortawesome/free-solid-svg-icons';
+import GraphViewModal from '../GraphViewModal/GraphViewModal';
 
 export default class ToolBox extends React.Component<{callbackPlaying : any}> {
 
@@ -13,6 +14,7 @@ export default class ToolBox extends React.Component<{callbackPlaying : any}> {
 
   componentDidMount() {
     GraphSchematicsManager.exitCreationMode().subscribe(() => this.forceUpdate());
+    GraphSchematicsManager.isPlaying().subscribe((isPlaying) => this.setState({isPlaying}));
   }
 
   onClickButton(objectId: String) {
@@ -34,6 +36,7 @@ export default class ToolBox extends React.Component<{callbackPlaying : any}> {
   render() {
     return (
       <div className={"toolbox" + (GraphSchematicsManager.getStateEdgeCreationMode() ? ' toolbox-crosshair' : '')}>
+        <GraphViewModal></GraphViewModal>
         {
           this.state.isPlaying ? 
           <div className="pause-button" onClick={() => this.togglePlayButton()}>❚❚</div> :
@@ -48,8 +51,8 @@ export default class ToolBox extends React.Component<{callbackPlaying : any}> {
           <div className="toolbox-icon">/</div>
           <div className="toolbox-text">Adicionar Aresta</div>
         </div>
-
-        <div id="aresta" className={"toolbox-button"}>
+        
+        <div id="aresta" className={"toolbox-button"} onClick={() => GraphViewModal.openModal({})}>
           <div className="toolbox-icon"><FontAwesomeIcon icon={faChartSimple} /></div>
           <div className="toolbox-text">Gráficos</div>
         </div>
