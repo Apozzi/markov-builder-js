@@ -5,15 +5,7 @@ import './CustomVerticeSongViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import { NotaMusical } from '../../utils/NotasMusicaisEnum';
 import toast from 'react-hot-toast';
-
-interface Vertex {
-  id: number;
-  label: string;
-  sound?: {
-    type: 'note' | 'custom';
-    value: NotaMusical | string;
-  };
-}
+import { Vertex } from '../../interfaces/Vertex';
 
 interface State {
   showModal: boolean;

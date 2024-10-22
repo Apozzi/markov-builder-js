@@ -3,20 +3,8 @@ import Modal from 'react-modal';
 import { Subject } from 'rxjs';
 import './DetailsViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
-import { NotaMusical } from '../../utils/NotasMusicaisEnum';
 import toast from 'react-hot-toast';
-
-interface Vertex {
-  id: number;
-  label: string;
-  x: number;
-  y: number;
-  visitCount: number;
-  sound?: {
-    type: 'note' | 'custom';
-    value: NotaMusical | string;
-  };
-}
+import { Vertex } from '../../interfaces/Vertex';
 
 interface EdgeWeights {
   [sourceId: number]: {

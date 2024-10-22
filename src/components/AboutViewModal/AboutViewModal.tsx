@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'react-modal';
 import { Subject } from 'rxjs';
 import './AboutViewModal.css';
-import { width } from '@fortawesome/free-solid-svg-icons/fa0';
 import AdevLogo from '../../assets/adev.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';

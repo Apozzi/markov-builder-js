@@ -7,6 +7,8 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import SimulatorUtils from '../../utils/SimulatorUtils';
 import { NotaMusical, NOTE_FREQUENCIES } from '../../utils/NotasMusicaisEnum';
 import { AudioManager } from '../../utils/AudioManager';
+import { Vertex } from '../../interfaces/Vertex';
+import { Edge } from '../../interfaces/Edge';
 
 const debugMode = false;
 
@@ -33,23 +35,6 @@ const initState = {
   audioContext: null,
   vertexHistory: [],
 };
-
-interface Vertex {
-  id: number;
-  x: number;
-  y: number;
-  label: string;
-  visitCount: number;
-  sound?: {
-    type: 'note' | 'custom';
-    value: NotaMusical | string;
-  };
-}
-
-interface Edge {
-  source: number;
-  target: number;
-}
 
 interface EdgeWeights {
   [sourceId: number]: {
