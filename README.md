@@ -1,50 +1,20 @@
-# React + TypeScript + Vite
+# Markov Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple tool for building and visualizing Markov Chains as directed graphs. 
+Define states and transitions, then visualize the structure in an interactive, easy-to-use interface.
 
-Currently, two official plugins are available:
+Link to Hosted Webapp: (to do)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Animação](https://github.com/user-attachments/assets/507e0d6b-2f91-442f-a6e9-4d863371e82a)
 
-## Expanding the ESLint configuration
+This tool allows users to define states and transitions between them, creating a clear, visual representation of the Markov Chain. By interacting with an intuitive, drag-and-drop interface, users can easily build the structure of their chain, adding or removing states and setting transition probabilities between them.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+# Execution
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+To run app locally just run `npm run dev`.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Author
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Anderson Pozzi (2024).
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
