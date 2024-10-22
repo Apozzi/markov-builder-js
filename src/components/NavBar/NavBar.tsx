@@ -106,8 +106,16 @@ export default class NavBar extends React.Component<any> {
             <div className="navbar--arrow-icon">▼</div> Layout / Organização do Grafo
           </div>
           <div className="subnav--content">
-            <a>...</a>
-            <a>...</a>
+            <a>Layout Circular</a>
+            <a>Layout Radial</a>
+            <a>Layout de Camadas (Sugiyama)</a>
+            <a>Layout de Árvore</a>
+            <a>Layout de Grade</a>
+            <a>Layout de Espectro</a>
+            <a>Aplicar Algoritmo de Fruchterman-Reingold</a>
+            <a>Aplicar Algoritmo de Kamada-Kawai</a>
+            <a>Aplicar Algoritmo de Yifan Hu</a>
+            <a>Aplicar Escalonamento Multi-Dimensional</a>
           </div>
         </div>
 
