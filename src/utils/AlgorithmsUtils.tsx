@@ -1,50 +1,64 @@
 import { Vertex } from "../interfaces/Vertex";
 
-let springForce = 1;
-let idealDistance = 3;
-let strengthOfRepulsiveForce = 2;
-
-
-export default class AlgorithmsUtils {
-
-    static normalizedVector(v: Vertex, u: Vertex) {
-        const vector = {
-            x: u.x - v.x,
-            y: u.y - v.y
-        };
-        const magnitude = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-        if (magnitude === 0) return { x: 0, y: 0 };
-        return {
-            x: vector.x / magnitude,
-            y: vector.y / magnitude
-        };
-    }
-
-    static euclideanDistanceFast(u: Vertex, v: Vertex) {
-        return (u.x - v.x)**2 + (u.y - v.y)**2;
-        
-    }
-
-    static euclideanDistance(u: Vertex, v: Vertex) {
-        return Math.sqrt(this.euclideanDistanceFast(u, v));
-        
-    }
-
-    static calculateRepulsiveForce(u: Vertex, v: Vertex) {
-        let normalizedVectorUToV = this.normalizedVector(u, v);
-        let force = strengthOfRepulsiveForce/this.euclideanDistanceFast(u,v);
-        return {
-            x: normalizedVectorUToV.x * force,
-            y: normalizedVectorUToV.y * force
-        }
-     }
-  
-     static calculateAttractiveForce(u: Vertex, v: Vertex) {
-        let normalizedVectorVToU = this.normalizedVector(v, u);
-        let force =  springForce * Math.log(this.euclideanDistance(u,v)/idealDistance);
-        return {
-            x: normalizedVectorVToU.x * force,
-            y: normalizedVectorVToU.y * force
-        }
-     }
+export interface Vector2D {
+    x: number;
+    y: number;
 }
+export class VectorUtils {
+    static normalize(v: Vector2D): Vector2D {
+        const magnitude = this.magnitude(v);
+        return magnitude === 0 
+            ? { x: 0, y: 0 }
+            : { x: v.x / magnitude, y: v.y / magnitude };
+    }
+
+    static subtract(v1: Vector2D | Vertex, v2: Vector2D | Vertex): Vector2D {
+        if (!v1 || !v2) {
+            throw new Error("Cannot subtract undefined vectors");
+        }
+        return {
+            x: v1.x - v2.x,
+            y: v1.y - v2.y
+        };
+    }
+
+    static add(v1: Vector2D, v2: Vector2D): Vector2D {
+        return {
+            x: v1.x + v2.x,
+            y: v1.y + v2.y
+        };
+    }
+
+    static scale(v: Vector2D, factor: number): Vector2D {
+        return {
+            x: v.x * factor,
+            y: v.y * factor
+        };
+    }
+
+    static magnitude(v: Vector2D): number {
+        return Math.sqrt(v.x * v.x + v.y * v.y);
+    }
+
+    static limitMagnitude(v: Vector2D, maxMagnitude: number): Vector2D {
+        const magnitude = this.magnitude(v);
+        if (magnitude > maxMagnitude) {
+            const scale = maxMagnitude / magnitude;
+            return this.scale(v, scale);
+        }
+        return v;
+    }
+
+    static randomOffset(scale: number = 0.1): Vector2D {
+        return {
+            x: (Math.random() - 0.5) * scale,
+            y: (Math.random() - 0.5) * scale
+        };
+    }
+}
+
+export interface Vector2D {
+    x: number;
+    y: number;
+}
+

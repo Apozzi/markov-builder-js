@@ -11,12 +11,10 @@ export default class NavBar extends React.Component<any> {
   saveGraph = () => {
     const fileName = prompt('Digite o nome do arquivo para salvar:', 'graph_state.json');
     if (!fileName) return;
-
     let state = GraphSchematicsManager.getGraphState()
     const jsonString = JSON.stringify(state);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
     const a = document.createElement('a');
     a.href = url;
     a.download = fileName.endsWith('.json') ? fileName : `${fileName}.json`;
@@ -106,15 +104,15 @@ export default class NavBar extends React.Component<any> {
             <div className="navbar--arrow-icon">▼</div> Layout / Organização do Grafo
           </div>
           <div className="subnav--content">
-            <a>Layout Circular</a>
-            <a>Layout Radial</a>
-            <a>Layout de Camadas (Sugiyama)</a>
-            <a>Layout de Árvore</a>
-            <a>Layout de Grade</a>
-            <a>Layout de Espectro</a>
-            <a>Aplicar Algoritmo de Fruchterman-Reingold</a>
-            <a>Aplicar Algoritmo de Kamada-Kawai</a>
-            <a>Aplicar Algoritmo de Yifan Hu</a>
+            <a onClick={() => GraphSchematicsManager.applyCircularLayout()}>Layout Circular</a>
+            <a onClick={() => GraphSchematicsManager.applyRadialLayout()}>Layout Radial</a>
+            <a onClick={() => GraphSchematicsManager.applySugiyamaLayout()}>Layout de Camadas (Sugiyama)</a>
+            <a onClick={() => GraphSchematicsManager.applyTreeLayout()}>Layout de Árvore</a>
+            <a onClick={()=> GraphSchematicsManager.applyGridLayout()}>Layout de Grade</a>
+            <a onClick={()=> GraphSchematicsManager.applySpectralLayout()}>Layout de Espectro</a>
+            <a onClick={() => GraphSchematicsManager.applyFruchtermanReingold()}>Aplicar Algoritmo de Fruchterman-Reingold</a>
+            <a onClick={()=> GraphSchematicsManager.applyKamadaKawai()}>Aplicar Algoritmo de Kamada-Kawai</a>
+            <a onClick={()=> GraphSchematicsManager.applyYifanHu()}>Aplicar Algoritmo de Yifan Hu</a>
             <a>Aplicar Escalonamento Multi-Dimensional</a>
           </div>
         </div>

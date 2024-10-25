@@ -27,6 +27,93 @@ export default class GraphSchematicsManager {
   private static offsetControlY = new Subject();
   private static offsetCenter = new Subject();
 
+  //
+
+  private static applyFruchtermanReingoldSubject = new Subject<any>();
+  private static applyKamadaKawaiSubject = new Subject<any>();
+  private static applyYifanHuSubject = new Subject<any>();
+
+  //
+
+  private static applyCircularLayoutSubject = new Subject<any>();
+  private static applyGridLayoutSubject = new Subject<any>();
+  private static applyTreeLayoutSubject = new Subject<any>();
+  private static applyRadialLayoutSubject = new Subject<any>();
+  private static applySpectralLayoutSubject = new Subject<any>();
+  private static applySugiyamaLayoutSubject = new Subject<any>();
+
+  static applyYifanHu() {
+    GraphSchematicsManager.applyYifanHuSubject.next({});
+  }
+
+  static onApplyYifanHu() {
+    return GraphSchematicsManager.applyYifanHuSubject;
+  }
+
+  static applyKamadaKawai() {
+    GraphSchematicsManager.applyKamadaKawaiSubject.next({});
+  }
+
+  static onApplyKamadaKawai() {
+    return GraphSchematicsManager.applyKamadaKawaiSubject;
+  }
+
+  static applySugiyamaLayout() {
+    GraphSchematicsManager.applySugiyamaLayoutSubject.next({});
+  }
+
+  static onApplySugiyamaLayout() {
+    return GraphSchematicsManager.applySugiyamaLayoutSubject;
+  }
+
+  static applySpectralLayout() {
+    GraphSchematicsManager.applySpectralLayoutSubject.next({});
+  }
+
+  static onApplySpectralLayout() {
+    return GraphSchematicsManager.applySpectralLayoutSubject;
+  }
+
+  static applyRadialLayout() {
+    GraphSchematicsManager.applyRadialLayoutSubject.next({});
+  }
+
+  static onApplyRadialLayout() {
+    return GraphSchematicsManager.applyRadialLayoutSubject;
+  }
+
+  static applyTreeLayout() {
+    GraphSchematicsManager.applyTreeLayoutSubject.next({});
+  }
+
+  static onApplyTreeLayout() {
+    return GraphSchematicsManager.applyTreeLayoutSubject;
+  }
+
+  static applyGridLayout() {
+    GraphSchematicsManager.applyGridLayoutSubject.next({});
+  }
+
+  static onApplyGridLayoutSubject() {
+    return GraphSchematicsManager.applyGridLayoutSubject;
+  }
+
+  static applyCircularLayout() {
+    GraphSchematicsManager.applyCircularLayoutSubject.next({});
+  }
+
+  static onApplyCircularLayoutSubject() {
+    return GraphSchematicsManager.applyCircularLayoutSubject;
+  }
+
+  static applyFruchtermanReingold() {
+    GraphSchematicsManager.applyFruchtermanReingoldSubject.next({});
+  }
+
+  static onApplyFruchtermanReingold() {
+    return GraphSchematicsManager.applyFruchtermanReingoldSubject;
+  }
+
   static resetAll() {
     GraphSchematicsManager.resetAllSubject.next({});
     AlphabetIterator.reload();

@@ -9,6 +9,10 @@ import { NotaMusical, NOTE_FREQUENCIES } from '../../utils/NotasMusicaisEnum';
 import { AudioManager } from '../../utils/AudioManager';
 import { Vertex } from '../../interfaces/Vertex';
 import { Edge } from '../../interfaces/Edge';
+import { FruchtermanReingold } from '../../utils/FruchtermanReingoldAlgorithm';
+import { CircularLayout } from '../../utils/layouts/CircularLayout';
+import { GridLayout } from '../../utils/layouts/GridLayout';
+import { TreeLayout } from '../../utils/layouts/TreeLayout';
 
 const debugMode = false;
 
@@ -182,6 +186,52 @@ export default class GraphSchematics extends React.Component<{}, {
         this.forceUpdate();
       });
       GraphSchematicsManager.onChangeConfig().subscribe((config: any) => this.setState({config}));
+
+      //
+
+      GraphSchematicsManager.onApplyFruchtermanReingold().subscribe(() => {
+          let { vertices, edges } = this.state;
+          let algFruchtermanReingold = new FruchtermanReingold({
+              iterations: 10,
+              coolingFactor: 0.99
+          });
+          algFruchtermanReingold.initializeLayout(vertices);
+          let executionCount = 0;
+          const maxExecutions = 20;
+          const interval = 50;
+      
+          const intervalId = setInterval(() => {
+              let verticesUpdated = algFruchtermanReingold.layout(vertices, edges)
+              this.setState({ vertices: verticesUpdated });
+              vertices = verticesUpdated;
+              
+              executionCount++;
+              if (executionCount >= maxExecutions) {
+                  clearInterval(intervalId);
+              }
+          }, interval);
+      });
+
+      //
+
+      GraphSchematicsManager.onApplyCircularLayoutSubject().subscribe(() => {
+        let { vertices } = this.state;
+        const circularLayout = new CircularLayout();
+        this.setState({ vertices: circularLayout.layout(vertices) });
+      });
+
+      GraphSchematicsManager.onApplyGridLayoutSubject().subscribe(() => {
+        let { vertices, edges } = this.state;
+        const gridLayout = new GridLayout();
+        this.setState({ vertices: gridLayout.layout(vertices, edges) });
+      });
+
+      GraphSchematicsManager.onApplyTreeLayout().subscribe(() => {
+        let { vertices, edges } = this.state;
+        const treeLayout = new TreeLayout();
+        treeLayout.layout(vertices, edges);
+      });
+
     }
     mounted = true;
   }
