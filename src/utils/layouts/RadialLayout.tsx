@@ -1,6 +1,5 @@
 import { Edge } from "../../interfaces/Edge";
 import { Vertex } from "../../interfaces/Vertex";
-import { Vector2D, VectorUtils } from "../AlgorithmsUtils";
 
 export interface LayoutConfig {
 }
