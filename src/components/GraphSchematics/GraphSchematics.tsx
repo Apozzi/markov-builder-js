@@ -13,6 +13,8 @@ import { FruchtermanReingold } from '../../utils/FruchtermanReingoldAlgorithm';
 import { CircularLayout } from '../../utils/layouts/CircularLayout';
 import { GridLayout } from '../../utils/layouts/GridLayout';
 import { TreeLayout } from '../../utils/layouts/TreeLayout';
+import { RadialLayout } from '../../utils/layouts/RadialLayout';
+import { SugiyamaLayout } from '../../utils/layouts/SugiyamaLayout';
 
 const debugMode = false;
 
@@ -226,10 +228,22 @@ export default class GraphSchematics extends React.Component<{}, {
         this.setState({ vertices: gridLayout.layout(vertices, edges) });
       });
 
-      GraphSchematicsManager.onApplyTreeLayout().subscribe(() => {
+      GraphSchematicsManager.onApplyTreeLayout().subscribe((config) => {
         let { vertices, edges } = this.state;
         const treeLayout = new TreeLayout();
-        treeLayout.layout(vertices, edges);
+        this.setState({ vertices: treeLayout.layout(vertices, edges, config.inverted) });
+      });
+
+      GraphSchematicsManager.onApplyRadialLayout().subscribe(() => {
+        let { vertices, edges } = this.state;
+        const treeLayout = new RadialLayout();
+        this.setState({ vertices: treeLayout.layout(vertices, edges) });
+      });
+
+      GraphSchematicsManager.onApplySugiyamaLayout().subscribe(() => {
+        let { vertices, edges } = this.state;
+        const treeLayout = new SugiyamaLayout();
+        this.setState({ vertices: treeLayout.layout(vertices, edges) });
       });
 
     }

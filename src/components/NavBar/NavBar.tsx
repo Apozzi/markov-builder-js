@@ -5,6 +5,7 @@ import DetailsViewModal from '../DetailsViewModal/DetailsViewModal';
 import AboutViewModal from '../AboutViewModal/AboutViewModal';
 import CustomVerticeSongViewModal from '../CustomVerticeSongViewModal/CustomVerticeSongViewModal';
 import ConfigurationViewModal from '../ConfigurationViewModal/ConfigurationViewModal';
+import TreeLayoutConfigViewModal from '../TreeLayoutConfigViewModal/TreeLayoutConfigViewModal';
 
 
 export default class NavBar extends React.Component<any> {
@@ -65,6 +66,7 @@ export default class NavBar extends React.Component<any> {
         <CustomVerticeSongViewModal></CustomVerticeSongViewModal>
         <ConfigurationViewModal></ConfigurationViewModal>
         <AboutViewModal></AboutViewModal>
+        <TreeLayoutConfigViewModal></TreeLayoutConfigViewModal>
         <div className="navbar--button" onClick={() => GraphSchematicsManager.resetAll()}>
           Limpar
         </div>
@@ -107,7 +109,7 @@ export default class NavBar extends React.Component<any> {
             <a onClick={() => GraphSchematicsManager.applyCircularLayout()}>Layout Circular</a>
             <a onClick={() => GraphSchematicsManager.applyRadialLayout()}>Layout Radial</a>
             <a onClick={() => GraphSchematicsManager.applySugiyamaLayout()}>Layout de Camadas (Sugiyama)</a>
-            <a onClick={() => GraphSchematicsManager.applyTreeLayout()}>Layout de Árvore</a>
+            <a onClick={() => TreeLayoutConfigViewModal.openModal({})}>Layout de Árvore</a>
             <a onClick={()=> GraphSchematicsManager.applyGridLayout()}>Layout de Grade</a>
             <a onClick={()=> GraphSchematicsManager.applySpectralLayout()}>Layout de Espectro</a>
             <a onClick={() => GraphSchematicsManager.applyFruchtermanReingold()}>Aplicar Algoritmo de Fruchterman-Reingold</a>

@@ -82,8 +82,8 @@ export default class GraphSchematicsManager {
     return GraphSchematicsManager.applyRadialLayoutSubject;
   }
 
-  static applyTreeLayout() {
-    GraphSchematicsManager.applyTreeLayoutSubject.next({});
+  static applyTreeLayout(inverted: boolean) {
+    GraphSchematicsManager.applyTreeLayoutSubject.next({inverted});
   }
 
   static onApplyTreeLayout() {
