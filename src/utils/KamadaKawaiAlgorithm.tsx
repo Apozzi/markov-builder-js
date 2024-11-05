@@ -106,9 +106,10 @@ export class KamadaKawai {
         let maxDeltaId = 0;
         for (let i = 0; i < vertices.length; ++i) {
             const d = this.computePartialDerivatives(vertices, vertices[i].id, false);
-            this.Delta.set(vertices[i].id, Math.hypot(d.Ex, d.Ey));
-            if (this.Delta.get(vertices[i].id)! > maxDelta) {
-                maxDelta = this.Delta.get(vertices[i].id)!;
+            const delta = Math.hypot(d.Ex, d.Ey);
+            this.Delta.set(vertices[i].id, delta);
+            if (delta > maxDelta) {
+                maxDelta = delta;
                 maxDeltaId = vertices[i].id;
             }
         }
