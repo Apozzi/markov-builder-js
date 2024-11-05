@@ -1,5 +1,6 @@
 import { Subject, take } from "rxjs";
 import AlphabetIterator from "../../utils/AlphabetIterator";
+import { Vertex } from "../../interfaces/Vertex";
 
 export default class GraphSchematicsManager {
 
@@ -31,7 +32,6 @@ export default class GraphSchematicsManager {
 
   private static applyFruchtermanReingoldSubject = new Subject<any>();
   private static applyKamadaKawaiSubject = new Subject<any>();
-  private static applyYifanHuSubject = new Subject<any>();
 
   //
 
@@ -42,13 +42,6 @@ export default class GraphSchematicsManager {
   private static applySpectralLayoutSubject = new Subject<any>();
   private static applySugiyamaLayoutSubject = new Subject<any>();
 
-  static applyYifanHu() {
-    GraphSchematicsManager.applyYifanHuSubject.next({});
-  }
-
-  static onApplyYifanHu() {
-    return GraphSchematicsManager.applyYifanHuSubject;
-  }
 
   static applyKamadaKawai() {
     GraphSchematicsManager.applyKamadaKawaiSubject.next({});
@@ -74,8 +67,8 @@ export default class GraphSchematicsManager {
     return GraphSchematicsManager.applySpectralLayoutSubject;
   }
 
-  static applyRadialLayout() {
-    GraphSchematicsManager.applyRadialLayoutSubject.next({});
+  static applyRadialLayout(selectedVertice : Vertex | null) {
+    GraphSchematicsManager.applyRadialLayoutSubject.next({ selectedVertice });
   }
 
   static onApplyRadialLayout() {
@@ -224,7 +217,7 @@ export default class GraphSchematicsManager {
     return GraphSchematicsManager.isPlayingSubject;
   }
 
-  static getGraphState() {
+  static getGraphState() : any {
     return this.savedState;
   }
 
@@ -235,6 +228,8 @@ export default class GraphSchematicsManager {
 
   static loadGraphState(state: any) {
     GraphSchematicsManager.loadStateSubject.next(state);
+    this.setGraphState(state);
+    this.changeVerticeArray(state.vertices)
   }
 
   static setConfig(config: any) {

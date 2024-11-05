@@ -15,6 +15,16 @@ div {
     padding-top: 20px;
 }
 
+.vertex-select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background: #444;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 4px;
+}
+
 .modal-actions {
   padding: 20px;
   display: flex;
@@ -33,3 +43,5 @@ div {
 .save-button:hover {
   background: #45a049;
 }
+
+  

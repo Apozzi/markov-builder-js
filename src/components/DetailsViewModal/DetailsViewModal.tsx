@@ -60,7 +60,7 @@ export default class DetailsViewModal extends React.Component<any> {
   }
 
   handleInputChange = (sourceId: number, targetId: number, value: string) => {
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+    if (value === '' || /^\d*\.?\d*$|^\d+\.$/.test(value)) {
       const newEdgeWeights = { ...this.state.edgeWeights };
       
       if (!newEdgeWeights[sourceId]) {
@@ -82,7 +82,8 @@ export default class DetailsViewModal extends React.Component<any> {
 
   getEdgeWeight = (sourceId: number, targetId: number): string => {
     if (this.state.edgeWeights[sourceId]?.[targetId] !== undefined) {
-      return this.state.edgeWeights[sourceId][targetId].toString();
+      const weight = this.state.edgeWeights[sourceId]?.[targetId];
+      return weight !== undefined ? (weight.toFixed(0) === weight.toString() ? weight+ '.0' : weight.toString() )  : '0.0'; 
     }
     return '';
   }
@@ -182,7 +183,8 @@ export default class DetailsViewModal extends React.Component<any> {
                       {this.state.vertices.map((targetVertex) => (
                         <td key={`${sourceVertex.id}-${targetVertex.id}`}>
                           <input
-                            type="text"
+                            type="number"
+                            step="0.1"
                             className="matrix-input"
                             value={this.getEdgeWeight(sourceVertex.id, targetVertex.id)}
                             onChange={(e) => this.handleInputChange(sourceVertex.id, targetVertex.id, e.target.value)}

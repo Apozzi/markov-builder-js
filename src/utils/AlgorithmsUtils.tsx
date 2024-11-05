@@ -55,6 +55,10 @@ export class VectorUtils {
             y: (Math.random() - 0.5) * scale
         };
     }
+
+    static distance(v1: Vertex, v2: Vertex): number {
+        return Math.hypot(v1.x - v2.x , v1.y - v2.y)
+    }
 }
 
 export interface Vector2D {

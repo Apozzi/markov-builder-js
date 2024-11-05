@@ -15,6 +15,8 @@ import { GridLayout } from '../../utils/layouts/GridLayout';
 import { TreeLayout } from '../../utils/layouts/TreeLayout';
 import { RadialLayout } from '../../utils/layouts/RadialLayout';
 import { SugiyamaLayout } from '../../utils/layouts/SugiyamaLayout';
+import { SpectralLayout } from '../../utils/layouts/SpectralLayout';
+import { KamadaKawai } from '../../utils/KamadaKawaiAlgorithm';
 
 const debugMode = false;
 
@@ -214,6 +216,12 @@ export default class GraphSchematics extends React.Component<{}, {
           }, interval);
       });
 
+      GraphSchematicsManager.onApplyKamadaKawai().subscribe(() => {
+        let { vertices, edges } = this.state;
+        let algKamadaKawai = new KamadaKawai();
+        this.setState({ vertices: algKamadaKawai.layout(vertices, edges) });
+    });
+
       //
 
       GraphSchematicsManager.onApplyCircularLayoutSubject().subscribe(() => {
@@ -234,16 +242,22 @@ export default class GraphSchematics extends React.Component<{}, {
         this.setState({ vertices: treeLayout.layout(vertices, edges, config.inverted) });
       });
 
-      GraphSchematicsManager.onApplyRadialLayout().subscribe(() => {
+      GraphSchematicsManager.onApplyRadialLayout().subscribe((config) => {
         let { vertices, edges } = this.state;
         const treeLayout = new RadialLayout();
-        this.setState({ vertices: treeLayout.layout(vertices, edges) });
+        this.setState({ vertices: treeLayout.layout(vertices, edges, config.selectedVertice) });
       });
 
       GraphSchematicsManager.onApplySugiyamaLayout().subscribe(() => {
         let { vertices, edges } = this.state;
         const treeLayout = new SugiyamaLayout();
         this.setState({ vertices: treeLayout.layout(vertices, edges) });
+      });
+
+      GraphSchematicsManager.onApplySpectralLayout().subscribe(() => {
+        let { vertices, edges } = this.state;
+        const spectralLayout = new SpectralLayout();
+        this.setState({ vertices: spectralLayout.layout(vertices, edges) });
       });
 
     }
@@ -616,7 +630,7 @@ export default class GraphSchematics extends React.Component<{}, {
         if (!dual) {
           return this.renderNormalEdge(source, target, index, scale, 0.1, 0.04, false);
         } else {
-          return this.renderNormalEdge(source, target, index, scale, 0.3, 0.1, true);
+          return this.renderNormalEdge(source, target, index, scale, 0.3, 0.08, true);
         }
       }
     });

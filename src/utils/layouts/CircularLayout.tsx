@@ -13,7 +13,7 @@ export interface CircularLayoutConfig {
 }
 
 const DEFAULT_CONFIG: Required<CircularLayoutConfig> = {
-    radius: 200,
+    radius: 250,
     startAngle: 0,
     angleSpacing: 0,
     centerX: 300,
