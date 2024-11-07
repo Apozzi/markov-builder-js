@@ -15,6 +15,18 @@ Aplicativo possibilita visualzação gráfica do histórico de transição de es
 
 ![env](https://github.com/user-attachments/assets/46e6f72a-31d3-4e7e-91c6-44273a374727)
 
+# Outras funcionalidades.
+
+O aplicativo implementa alguns algoritmo de layout para organização de graficos.
+- Layout Circular
+- Layout Radial
+- Layout de Árvore
+- Layout de Grade
+- Layout Espectral
+Além de ter implementação de Algoritmo de Layout baseado em molas e força-direcionada:
+- Algoritmo de Fruchterman-Reingold
+- Algoritmo de Kamada-Kawai
+
 
 
 
