@@ -23,6 +23,7 @@ O aplicativo implementa alguns algoritmo de layout para organização de grafico
 - Layout de Árvore
 - Layout de Grade
 - Layout Espectral
+  
 Além de ter implementação de Algoritmo de Layout baseado em molas e força-direcionada:
 - Algoritmo de Fruchterman-Reingold
 - Algoritmo de Kamada-Kawai
