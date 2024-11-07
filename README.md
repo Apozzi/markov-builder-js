@@ -4,8 +4,6 @@ Ferramenta para construção e visualização de Cadeias de Markov.
 
 Defina estados e transições e visualiza as estruturas internas.
 
-Link to Hosted Webapp: (to do)
-
 ![env](https://github.com/user-attachments/assets/9a2795cc-6b98-43ae-90d5-51890899755a)
 
 
@@ -30,11 +28,13 @@ Além de ter implementação de Algoritmo de Layout baseado em molas e força-di
 
 Aplicativo é internacionalizado (Portugues/Ingles), e possibilita ampla variedade de customização (Inclusive customização de soms)
 
-# Execution
+# Link do App
+
+# Execução
 
 Para rodar localmente basta fazer install `npm run install` e posteriormente `npm run dev`.
 
-## Author
+## Autor
 
 Anderson Pozzi (2024).
 
