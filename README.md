@@ -1,40 +1,40 @@
 # Markov Builder
 
-Ferramenta para construção e visualização de Cadeias de Markov.
+Tool for building and visualizing Markov Chains
 
-Defina estados e transições e visualiza as estruturas internas.
+Define states and transitions and visualize internal structures.
 
 ![env](https://github.com/user-attachments/assets/9a2795cc-6b98-43ae-90d5-51890899755a)
 
 
-# Visualização Gráfica.
+# Graphical View.
 
-Aplicativo possibilita visualzação gráfica do histórico de transição de estado da cadeia de Markov, além do número de vezes que a vertice foi alcançada e a probabilidade geral do sistema.
+The application allows graphical visualization of the Markov chain's state transition history, in addition to the number of times the vertex was reached and the overall probability of the system.
 
 ![env](https://github.com/user-attachments/assets/46e6f72a-31d3-4e7e-91c6-44273a374727)
 
-# Outras funcionalidades.
+# Other features.
 
-O aplicativo implementa alguns algoritmo de layout para organização de graficos.
-- Layout Circular
-- Layout Radial
-- Layout de Árvore
-- Layout de Grade
-- Layout Espectral
-  
-Além de ter implementação de Algoritmo de Layout baseado em molas e força-direcionada:
-- Algoritmo de Fruchterman-Reingold
-- Algoritmo de Kamada-Kawai
+The application implements some layout algorithms for organizing graphs.
+- Circular Layout
+- Radial Layout
+- Tree Layout
+- Grid Layout
+- Spectral Layout
 
-Aplicativo é internacionalizado (Portugues/Ingles), e possibilita ampla variedade de customização (Inclusive customização de soms)
+In addition to implementing a Layout Algorithm based on springs and directed force:
+- Fruchterman-Reingold Algorithm
+- Kamada-Kawai Algorithm
 
-# Link do App
+The application is internationalized (Portuguese/English), and allows a wide variety of customization (including sound customization)
 
-# Execução
+# App Link
 
-Para rodar localmente basta fazer install `npm run install` e posteriormente `npm run dev`.
+# Execution
 
-## Autor
+To run locally, just install `npm run install` and then `npm run dev`.
+
+## Author
 
 Anderson Pozzi (2024).
 
