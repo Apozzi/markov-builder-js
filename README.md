@@ -34,7 +34,7 @@ Além de ter implementação de Algoritmo de Layout baseado em molas e força-di
 
 # Execution
 
-To run app locally just run `npm run dev`.
+Para rodar localmente basta fazer install `npm run install` e posteriormente `npm run dev`.
 
 ## Author
 
