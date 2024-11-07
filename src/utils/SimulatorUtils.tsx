@@ -27,7 +27,7 @@ const addObjectToTableObj = (gateId:String, clone: any, tableobj: any) => {
     clone.style.position = "relative";
     clone.style.zIndex = "10";
     clone.setAttribute( 'id', gateId + "Set" );
-    clone.onmousedown = (e : any) => {
+    clone.onmousedown = () => {
         cloneFunction(gateId);
         tableobj.removeChild(clone);
 

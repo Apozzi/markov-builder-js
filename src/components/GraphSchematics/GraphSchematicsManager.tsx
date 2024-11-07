@@ -1,4 +1,4 @@
-import { Subject, take } from "rxjs";
+import { Subject } from "rxjs";
 import AlphabetIterator from "../../utils/AlphabetIterator";
 import { Vertex } from "../../interfaces/Vertex";
 

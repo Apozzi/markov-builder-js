@@ -38,7 +38,7 @@ export default class AboutViewModal extends React.Component<any> {
     });
   }
 
-  handleCloseModal (value: any) {
+  handleCloseModal () {
     this.setState({ showModal: false });
   }
 
@@ -50,7 +50,7 @@ export default class AboutViewModal extends React.Component<any> {
            isOpen={this.state.showModal}
            contentLabel="Project"
            style={this.customStyles}
-           onRequestClose={() => this.handleCloseModal(null)}
+           onRequestClose={() => this.handleCloseModal()}
            overlayClassName="overlay"
            className='content-about'
         >
@@ -58,7 +58,7 @@ export default class AboutViewModal extends React.Component<any> {
             <div className="modal-title">
               <FormattedMessage id={"about"}/>
             </div>
-            <div className="modal-close-icon" onClick={() => this.handleCloseModal(null)}>
+            <div className="modal-close-icon" onClick={() => this.handleCloseModal()}>
               X
             </div>
           </div>
