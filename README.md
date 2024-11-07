@@ -23,8 +23,11 @@ The application implements some layout algorithms for organizing graphs.
 - Spectral Layout
 
 In addition to implementing a Layout Algorithm based on springs and directed force:
-- Fruchterman-Reingold Algorithm
 - Kamada-Kawai Algorithm
+- Fruchterman-Reingold Algorithm
+
+![env](https://github.com/user-attachments/assets/52f2186f-4c00-493e-b708-66d4c17a4497)
+
 
 The application is internationalized (Portuguese/English), and allows a wide variety of customization (including sound customization)
 
