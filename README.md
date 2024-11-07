@@ -28,9 +28,7 @@ Além de ter implementação de Algoritmo de Layout baseado em molas e força-di
 - Algoritmo de Fruchterman-Reingold
 - Algoritmo de Kamada-Kawai
 
-
-
-
+Aplicativo é internacionalizado (Portugues/Ingles), e possibilita ampla variedade de customização (Inclusive customização de soms)
 
 # Execution
 
