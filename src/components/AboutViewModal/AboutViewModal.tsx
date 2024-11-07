@@ -5,6 +5,7 @@ import './AboutViewModal.css';
 import AdevLogo from '../../assets/adev.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { FormattedMessage } from 'react-intl';
 
 export default class AboutViewModal extends React.Component<any> {
   static openSubject = new Subject();
@@ -55,14 +56,14 @@ export default class AboutViewModal extends React.Component<any> {
         >
           <div className="modal-header">
             <div className="modal-title">
-              Sobre
+              <FormattedMessage id={"about"}/>
             </div>
             <div className="modal-close-icon" onClick={() => this.handleCloseModal(null)}>
               X
             </div>
           </div>
           <div className='develeped-by'>
-            Desenvolvido por:
+            <FormattedMessage id={"developed_by"}/>
           </div>
           <img src={AdevLogo} className='logo'></img>
           <div className='name'>
@@ -70,9 +71,9 @@ export default class AboutViewModal extends React.Component<any> {
           </div>
           <pre className='about-desc'>
           2024 Anderson R. Pozzi.<br></br>
-          Todos os direitos reservados.<br></br><br></br>
+          <FormattedMessage id={"all_rights_reserved"}/><br></br><br></br>
 
-            Contato:<br></br>
+           <FormattedMessage id={"Contato"}/>:<br></br>
               eanderea1@gmail.com<br></br>
               adeveloper.com.br
           </pre>

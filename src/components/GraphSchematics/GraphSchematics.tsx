@@ -191,7 +191,6 @@ export default class GraphSchematics extends React.Component<{}, {
       GraphSchematicsManager.onChangeConfig().subscribe((config: any) => this.setState({config}));
 
       // Algoritmos de Manipulação de Layout.
-
       GraphSchematicsManager.onApplyFruchtermanReingold().subscribe(() => {
           let { vertices, edges } = this.state;
           let algFruchtermanReingold = new FruchtermanReingold({
@@ -219,9 +218,7 @@ export default class GraphSchematics extends React.Component<{}, {
         let { vertices, edges } = this.state;
         let algKamadaKawai = new KamadaKawai();
         this.setState({ vertices: algKamadaKawai.layout(vertices, edges) });
-    });
-
-      //
+      });
 
       GraphSchematicsManager.onApplyCircularLayoutSubject().subscribe(() => {
         let { vertices } = this.state;

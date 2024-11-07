@@ -85,3 +85,47 @@ div {
   .save-button:hover {
     background: #45a049;
   }
+
+  .language-label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .language-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .language-select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    appearance: none;
+    background-color: #fff;
+    background-image: none;
+    padding-right: 30px;
+  }
+  
+  .language-select option {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+  }
+  
+  .flag-icon {
+    margin-right: 8px;
+    font-size: 1.2em;
+    color: #555;
+  }
+  
+  .language-select:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .language-select option:hover {
+    background-color: #f1f1f1;
+  }

@@ -7,12 +7,33 @@ import GraphSchematics from './components/GraphSchematics/GraphSchematics';
 import DataBar from './components/DataBar/DataBar';
 import GraphSchematicsManager from './components/GraphSchematics/GraphSchematicsManager';
 import { Toaster } from 'react-hot-toast';
+import { IntlProvider } from 'react-intl';
+import { LOCALES } from './i18n/locales';
+import { Locale, messages } from "./i18n/messages";
+import { Subject } from 'rxjs';
 
 
 export default class App extends React.Component {
+  private static changeLanguageSubject = new Subject<Locale>();
+
   state = {
-    isPlaying: false
+    isPlaying: false,
+    locale: LOCALES.PORTUGUESE
   };
+
+  componentDidMount() {
+    const getDefaultLocale = (): Locale => {
+      const language = navigator.language || navigator.languages[0];
+      return language.startsWith('pt') ? 'pt' : 'en';
+    };
+    this.setState({locale: getDefaultLocale()});
+    App.changeLanguageSubject.subscribe((locale: Locale) => this.setState({locale}))
+  }
+
+  static changeLanguage(locale: Locale) {
+    App.changeLanguageSubject.next(locale);
+  }
+
 
   onChangePlayState = (state: boolean) => {
     this.setState({ isPlaying: state });
@@ -27,8 +48,14 @@ export default class App extends React.Component {
   }
 
   render() {
+    const { locale } = this.state;
     return (
       <div id="app" className="App" tabIndex={0} onKeyDown={(event) => this.onKeyPressed(event)}>
+        <IntlProvider
+          messages={messages[locale]}
+          locale={locale}
+          defaultLocale={LOCALES.PORTUGUESE}
+        >
         <Toaster 
           position="top-right"
           toastOptions={{
@@ -64,6 +91,7 @@ export default class App extends React.Component {
         </div>
         <GraphSchematics></GraphSchematics>
         <DataBar></DataBar>
+        </IntlProvider>
       </div>
     );
   }

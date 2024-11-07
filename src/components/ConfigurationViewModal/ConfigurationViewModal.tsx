@@ -4,11 +4,18 @@ import { Subject } from 'rxjs';
 import './ConfigurationViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import toast from 'react-hot-toast';
+import { FormattedMessage } from 'react-intl';
+import { LOCALES } from '../../i18n/locales';
+import { MdFlag } from 'react-icons/md';
+import { FaFlagUsa } from 'react-icons/fa';
+import App from '../../App';
+import { Locale } from '../../i18n/messages';
 
 interface State {
   showModal: boolean;
   speed: number;
   showSoundInfo: boolean;
+  language: string;
 }
 
 export default class ConfigurationViewModal extends React.Component<any, State> {
@@ -26,7 +33,8 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
   state: State = {
     showModal: false,
     speed: 1,
-    showSoundInfo: false
+    showSoundInfo: false,
+    language: LOCALES.PORTUGUESE
   };
 
   static openModal(obj: any) {
@@ -54,6 +62,12 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
     this.setState({ showSoundInfo: event.target.checked });
   }
 
+  handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLanguage = event.target.value;
+    this.setState({ language: newLanguage });
+    App.changeLanguage(newLanguage as Locale)
+  }
+
   applyChanges = () => {
     let { speed } = this.state;
     GraphSchematicsManager.toggleSongInfo(this.state.showSoundInfo);
@@ -77,7 +91,7 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
         >
           <div className="modal-header">
             <div className="modal-title">
-              Configurações
+              <FormattedMessage id={"configurations_header"}/>
             </div>
             <div className="modal-close-icon" onClick={this.handleCloseModal}>
               X
@@ -88,7 +102,7 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
             {/* Controle de Velocidade */}
             <div className='pad-15'>
               <div className="speed-control">
-                <label htmlFor="speed-range">Velocidade:</label>
+                <label htmlFor="speed-range"><FormattedMessage id={"speed"}/>:</label>
                 <input
                   type="range"
                   id="speed-range"
@@ -110,13 +124,36 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
                   onChange={this.handleShowSoundInfoChange}
                 />
                 <span className="switch"></span>
-                <div className='switch-text'>Mostrar informações de Som (Na interface UI)</div>
+                <div className='switch-text'><FormattedMessage id={"show_sound_info"}/></div>
               </label>
+            </div>
+
+            {/* Seleção de Idioma */}
+            <div className="pad-15">
+              <label htmlFor="language-select" className="language-label">
+                <FormattedMessage id="select_language" />
+              </label>
+              <div className="language-select-wrapper">
+                <select
+                  id="language-select"
+                  value={this.state.language}
+                  onChange={this.handleLanguageChange}
+                  className="language-select"
+                >
+                  <option value={LOCALES.PORTUGUESE}>
+                    <MdFlag className="flag-icon" /> Português
+                  </option>
+                  <option value={LOCALES.ENGLISH}>
+                    <FaFlagUsa className="flag-icon" /> English
+                  </option>
+                  {/* Adicione outros idiomas suportados com ícones apropriados */}
+                </select>
+              </div>
             </div>
 
             <div className='pad-15'>
               <button className="save-button" onClick={() => this.applyChanges()}>
-                Aplicar Configurações
+                <FormattedMessage id={"apply_configurations"}/>
               </button>
             </div>
           </div>

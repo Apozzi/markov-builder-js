@@ -5,6 +5,7 @@ import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager.ts
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartSimple } from '@fortawesome/free-solid-svg-icons';
 import GraphViewModal from '../GraphViewModal/GraphViewModal';
+import { FormattedMessage } from 'react-intl';
 
 export default class ToolBox extends React.Component<{callbackPlaying : any}> {
 
@@ -44,17 +45,17 @@ export default class ToolBox extends React.Component<{callbackPlaying : any}> {
         }
         <div id="addV" className="toolbox-button" onMouseDown={() => this.onClickButton('vertice')} >
           <div className="toolbox-icon">◯</div>
-          <div className="toolbox-text">Adicionar Vértice</div>
+          <div className="toolbox-text"><FormattedMessage id={"add_vertex"}/></div>
         </div>
 
         <div id="aresta" className={"toolbox-button " + (GraphSchematicsManager.getStateEdgeCreationMode() ? 'toolbox-button-on toolbox-crosshair' : '')} onMouseDown={() => this.toggleEdgeMode()} >
           <div className="toolbox-icon">/</div>
-          <div className="toolbox-text">Adicionar Aresta</div>
+          <div className="toolbox-text"><FormattedMessage id={"add_edge"}/></div>
         </div>
         
         <div id="aresta" className={"toolbox-button"} onClick={() => GraphViewModal.openModal({})}>
           <div className="toolbox-icon"><FontAwesomeIcon icon={faChartSimple} /></div>
-          <div className="toolbox-text">Gráficos</div>
+          <div className="toolbox-text"><FormattedMessage id={"graphics"}/></div>
         </div>
         
       </div>

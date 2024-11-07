@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import './RadialLayoutConfigViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import { Vertex } from '../../interfaces/Vertex';
+import { FormattedMessage } from 'react-intl';
 
 interface State {
   showModal: boolean;
@@ -73,7 +74,7 @@ export default class RadialLayoutConfigViewModal extends React.Component<any, St
         >
           <div className="modal-header">
             <div className="modal-title">
-              Configurações Layout de Árvore
+              <FormattedMessage id={"radial_layout_config"}/>
             </div>
             <div className="modal-close-icon" onClick={this.handleCloseModal}>
               X
@@ -83,7 +84,7 @@ export default class RadialLayoutConfigViewModal extends React.Component<any, St
           <div className='modal-content-extra'> 
             <div className='pad-15'>
               <label className="vertex-select-label">
-                Selecione o Vértice Raiz:
+                <FormattedMessage id={"select_root_vertex"}/>
                 <select 
                   value={this.state.selectedVertice?.id || ''} 
                   onChange={this.handleSelectVerticeChange}
@@ -104,7 +105,7 @@ export default class RadialLayoutConfigViewModal extends React.Component<any, St
                 className="save-button" 
                 onClick={() => this.applyChanges()}
               >
-                Aplicar Layout Radial
+                <FormattedMessage id={"apply_radial_layout"}/>
               </button>
             </div>
           </div>

@@ -6,6 +6,7 @@ import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import { NotaMusical } from '../../utils/NotasMusicaisEnum';
 import toast from 'react-hot-toast';
 import { Vertex } from '../../interfaces/Vertex';
+import { FormattedMessage } from 'react-intl';
 
 interface State {
   showModal: boolean;
@@ -136,7 +137,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
         >
           <div className="modal-header">
             <div className="modal-title">
-              Customização de Sons
+              <FormattedMessage id={"custom_sound_header"}/>
             </div>
             <div className="modal-close-icon" onClick={this.handleCloseModal}>
               X
@@ -146,7 +147,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
           <div className='modal-content-extra'> 
             <div className="vertex-sound-config">
               {this.state.vertices.length === 0 ? (
-                <h2>Nenhum vértice adicionado.</h2>
+                <h2><FormattedMessage id={"no_vertices_added"}/></h2>
               ) : (
                 this.state.vertices.map(vertex => (
                   <div key={vertex.id} className="vertex-config-item">
@@ -159,7 +160,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
                           checked={this.state.selectedType[vertex.id] === 'note'}
                           onChange={() => this.handleTypeChange(vertex.id, 'note')}
                         />
-                        Nota Musical
+                        <FormattedMessage id={"musical_note"}/>
                       </label>
                       <label>
                         <input
@@ -168,7 +169,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
                           checked={this.state.selectedType[vertex.id] === 'custom'}
                           onChange={() => this.handleTypeChange(vertex.id, 'custom')}
                         />
-                        Som Customizado
+                        <FormattedMessage id={"custom_sound"}/>
                       </label>
                     </div>
 
@@ -205,10 +206,10 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
                     onChange={this.handleShowSoundInfoChange}
                   />
                   <span className="switch"></span>
-                  <div className='switch-text'>Mostrar informações de Som (Na interface UI)</div>
+                  <div className='switch-text'><FormattedMessage id={"show_sound_info"}/></div>
                 </label>
                 <button className="save-button" onClick={this.handleSave}>
-                  Salvar Configurações
+                  <FormattedMessage id={"save_configurations"}/>
                 </button>
               </div>
             )}

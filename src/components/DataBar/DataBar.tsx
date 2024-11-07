@@ -3,9 +3,9 @@ import './DataBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faTrash } from '@fortawesome/free-solid-svg-icons';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
+import { FormattedMessage } from 'react-intl';
 
 export default class DataBar extends React.Component<any> {
-
   state = {
     isPlaying: false,
     selectedVertex: {
@@ -88,7 +88,7 @@ export default class DataBar extends React.Component<any> {
           />
         </div>
         <div className={`databar-content ${isNotVisible ? 'databar-cancel-events' : ''}`}>
-          <h3>Vértice</h3>
+          <h3><FormattedMessage id={"vertex_header"}/></h3>
           <select className='databar--select' value={selectedVertex.label} onChange={this.handleVertexChange}>
             {Array.from({ length: 26 }, (_, i) => {
               let letter = String.fromCharCode(65 + i);
@@ -103,7 +103,7 @@ export default class DataBar extends React.Component<any> {
             })}
           </select>
 
-          <h3>Arestas</h3>
+          <h3><FormattedMessage id={"edge_header"}/></h3>
           <ul>
             {edges.map((edge, index) => (
               <li key={index}>
@@ -116,13 +116,13 @@ export default class DataBar extends React.Component<any> {
           </ul>
 
           <div className="vertex-info">
-            <h4>Quant. de vezes que passou nesse vértice:</h4>
+            <h4><FormattedMessage id={"vertex_visit_count"}/>:</h4>
             <span className="vertex-count">{selectedVertex.visitCount}</span>
           </div>
 
 
           {this.state.showMusicalNote ? <div className="vertex-info">
-            <h4>Nota Músical da Vertice:</h4>
+            <h4><FormattedMessage id={"vertex_musical_note"}/>:</h4>
             <span className="vertex-count">{selectedVertex.sound.type === 'note' ? selectedVertex.sound.value : '-'}</span>
           </div> : ''}
         </div>

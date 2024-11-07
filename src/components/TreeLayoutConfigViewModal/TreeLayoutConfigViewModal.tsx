@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { Subject } from 'rxjs';
 import './TreeLayoutConfigViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
+import { FormattedMessage } from 'react-intl';
 
 interface State {
   showModal: boolean;
@@ -64,7 +65,7 @@ export default class TreeLayoutConfigViewModal extends React.Component<any, Stat
         >
           <div className="modal-header">
             <div className="modal-title">
-              Configurações Layout de Árvore
+              <FormattedMessage id={"tree_layout_configurations"}/>
             </div>
             <div className="modal-close-icon" onClick={this.handleCloseModal}>
               X
@@ -73,7 +74,7 @@ export default class TreeLayoutConfigViewModal extends React.Component<any, Stat
 
           <div className='modal-content-extra'> 
 
-          <h4>Obs.: O layout pode ficar caótico caso ouver algum ciclo dentro do grafo.</h4>
+          <h4><FormattedMessage id={"tree_layout_warning"}/></h4>
 
             <div className='pad-15'>
               <label className="sound-info-label">
@@ -83,13 +84,13 @@ export default class TreeLayoutConfigViewModal extends React.Component<any, Stat
                   onChange={this.handleShowSoundInfoChange}
                 />
                 <span className="switch"></span>
-                <div className='switch-text'>Inverter Eixo</div>
+                <div className='switch-text'><FormattedMessage id={"invert_axis"}/></div>
               </label>
             </div>
 
             <div className='pad-15'>
               <button className="save-button" onClick={() => this.applyChanges()}>
-                Aplicar Layout de Árvore
+                <FormattedMessage id={"apply_tree_layout"}/>
               </button>
             </div>
           </div>

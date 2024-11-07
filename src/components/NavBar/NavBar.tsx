@@ -7,6 +7,7 @@ import CustomVerticeSongViewModal from '../CustomVerticeSongViewModal/CustomVert
 import ConfigurationViewModal from '../ConfigurationViewModal/ConfigurationViewModal';
 import TreeLayoutConfigViewModal from '../TreeLayoutConfigViewModal/TreeLayoutConfigViewModal';
 import RadialLayoutConfigViewModal from '../RadialLayoutConfigViewModal/RadialLayoutConfigViewModal';
+import { FormattedMessage } from 'react-intl';
 
 
 export default class NavBar extends React.Component<any> {
@@ -70,7 +71,7 @@ export default class NavBar extends React.Component<any> {
         <TreeLayoutConfigViewModal></TreeLayoutConfigViewModal>
         <RadialLayoutConfigViewModal></RadialLayoutConfigViewModal>
         <div className="navbar--button" onClick={() => GraphSchematicsManager.resetAll()}>
-          Limpar
+          <FormattedMessage id={"clear"}/>
         </div>
         <div className="navbar--button" onClick={() => document.getElementById('file-input')?.click()}>
           <input
@@ -84,53 +85,53 @@ export default class NavBar extends React.Component<any> {
             }}
           />
           <label className="file-input-label">
-            Abrir
+            <FormattedMessage id={"open"}/>
           </label>
         </div>
         <div className="navbar--button" onClick={this.saveGraph}>
-          Salvar
+          <FormattedMessage id={"save"}/>
         </div>
 
         <div className="navbar--button-with-subnav">
           <div className="navbar--button">
-            <div className="navbar--arrow-icon">▼</div> Exemplos
+            <div className="navbar--arrow-icon">▼</div> <FormattedMessage id={"examples"}/>
           </div>
           <div className="subnav--content">
-            <a onClick={() => this.openExamplePeriodic()}>Periódico</a>
-            <a onClick={() => this.openExampleCounter()}>Contador</a>
-            <a onClick={() => this.openExampleTwoCommunicationClasses()}>Duas classes de Sem Comunicação</a>
-            <a onClick={() => this.openExampleTwoClassesWithSmallJump()}>Duas classes com Pulo</a>
-          </div>
-        </div>
-
-        <div className="navbar--button-with-subnav">
-          <div className="navbar--button">
-            <div className="navbar--arrow-icon">▼</div> Layout / Organização do Grafo
-          </div>
-          <div className="subnav--content">
-            <a onClick={() => GraphSchematicsManager.applyCircularLayout()}>Layout Circular</a>
-            <a onClick={() => RadialLayoutConfigViewModal.openModal({})}>Layout Radial</a>
-            <a onClick={() => TreeLayoutConfigViewModal.openModal({})}>Layout de Árvore</a>
-            <a onClick={()=> GraphSchematicsManager.applyGridLayout()}>Layout de Grade</a>
-            <a onClick={()=> GraphSchematicsManager.applySpectralLayout()}>Layout de Espectro</a>
-            <a onClick={() => GraphSchematicsManager.applyFruchtermanReingold()}>Aplicar Algoritmo de Fruchterman-Reingold</a>
-            <a onClick={()=> GraphSchematicsManager.applyKamadaKawai()}>Aplicar Algoritmo de Kamada-Kawai</a>
+            <a onClick={() => this.openExamplePeriodic()}><FormattedMessage id={"periodic_example"}/></a>
+            <a onClick={() => this.openExampleCounter()}><FormattedMessage id={"counter_example"}/></a>
+            <a onClick={() => this.openExampleTwoCommunicationClasses()}><FormattedMessage id={"two_communication_classes_example"}/></a>
+            <a onClick={() => this.openExampleTwoClassesWithSmallJump()}><FormattedMessage id={"two_classes_with_small_jump_example"}/></a>
           </div>
         </div>
 
         <div className="navbar--button-with-subnav">
           <div className="navbar--button">
-            <div className="navbar--arrow-icon">▼</div> Detalhes
+            <div className="navbar--arrow-icon">▼</div> <FormattedMessage id={"graph_layout_and_organization"}/>
           </div>
           <div className="subnav--content">
-            <a onClick={() => DetailsViewModal.openModal({})}>Matrix de Transição</a>
-            <a onClick={() => CustomVerticeSongViewModal.openModal({})}> Customização de Sons</a>
-            <a onClick={() => ConfigurationViewModal.openModal({})}> Configurações</a>
+            <a onClick={() => GraphSchematicsManager.applyCircularLayout()}><FormattedMessage id={"circular_layout"}/></a>
+            <a onClick={() => RadialLayoutConfigViewModal.openModal({})}><FormattedMessage id={"radial_layout"}/></a>
+            <a onClick={() => TreeLayoutConfigViewModal.openModal({})}><FormattedMessage id={"tree_layout"}/></a>
+            <a onClick={()=> GraphSchematicsManager.applyGridLayout()}><FormattedMessage id={"grid_layout"}/></a>
+            <a onClick={()=> GraphSchematicsManager.applySpectralLayout()}><FormattedMessage id={"spectral_layout"}/></a>
+            <a onClick={() => GraphSchematicsManager.applyFruchtermanReingold()}><FormattedMessage id={"fruchterman_reingold"}/></a>
+            <a onClick={()=> GraphSchematicsManager.applyKamadaKawai()}><FormattedMessage id={"kamada_kawai"}/></a>
+          </div>
+        </div>
+
+        <div className="navbar--button-with-subnav">
+          <div className="navbar--button">
+            <div className="navbar--arrow-icon">▼</div> <FormattedMessage id={"details"}/>
+          </div>
+          <div className="subnav--content">
+            <a onClick={() => DetailsViewModal.openModal({})}><FormattedMessage id={"transition_matrix"}/></a>
+            <a onClick={() => CustomVerticeSongViewModal.openModal({})}><FormattedMessage id={"custom_sounds"}/></a>
+            <a onClick={() => ConfigurationViewModal.openModal({})}><FormattedMessage id={"configurations"}/></a>
           </div>
         </div>
 
         <div className="navbar--button" onClick={() => AboutViewModal.openModal({})}>
-          Sobre
+          <FormattedMessage id={"about"}/>
         </div>
       </div>
     )

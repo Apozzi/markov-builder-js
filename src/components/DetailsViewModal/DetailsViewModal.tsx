@@ -5,6 +5,7 @@ import './DetailsViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import toast from 'react-hot-toast';
 import { Vertex } from '../../interfaces/Vertex';
+import { FormattedMessage } from 'react-intl';
 
 interface EdgeWeights {
   [sourceId: number]: {
@@ -155,7 +156,7 @@ export default class DetailsViewModal extends React.Component<any> {
         >
           <div className="modal-header">
             <div className="modal-title">
-              Detalhes
+              <FormattedMessage id={"details"}/>
             </div>
             <div className="modal-close-icon" onClick={() => this.handleCloseModal()}>
               X
@@ -164,9 +165,9 @@ export default class DetailsViewModal extends React.Component<any> {
 
           <div className='modal-content-extra'> 
             <div>
-              <h3> Matriz de Transição</h3>
+              <h3> <FormattedMessage id={"transition_matrix"}/></h3>
               {this.state.vertices.length === 0 ? <h2>
-                Nenhum vertice adicionado.
+                <FormattedMessage id={"no_vertices_added"}/>
                 </h2>: <table className="transition-matrix">
                 <thead>
                   <tr>
@@ -198,9 +199,9 @@ export default class DetailsViewModal extends React.Component<any> {
               </table>}
 
               <div className='manipulation-buttons-transition-matrix'>
-                <button className='next-button button' onClick={this.applyChangesOnTheGraph}>Aplicar no Grafo</button>
-                <button className='confirmation-button button' onClick={this.addVertex}>Adicionar Vertice</button>
-                <button className='cancel-button button' onClick={this.deleteLastVertex}>Deletar Último Vértice</button>
+                <button className='next-button button' onClick={this.applyChangesOnTheGraph}><FormattedMessage id={"apply_to_graph"}/></button>
+                <button className='confirmation-button button' onClick={this.addVertex}><FormattedMessage id={"add_vertex"}/></button>
+                <button className='cancel-button button' onClick={this.deleteLastVertex}><FormattedMessage id={"delete_last_vertex"}/></button>
               </div>
             </div>
           </div>
