@@ -53,6 +53,7 @@ export const messages: Record<Locale, {
   contact: string;
   radial_layout_config: string;
   select_language: string;
+  app_is_not_available_mobile: string;
 }> = {
   'en': {
     add_vertex: "Add Vertex",
@@ -106,7 +107,8 @@ export const messages: Record<Locale, {
     all_rights_reserved: "All rights reserved.",
     contact: "Contact:",
     radial_layout_config: "Radial Layout Configuration",
-    select_language: "Select Language: "
+    select_language: "Select Language: ",
+    app_is_not_available_mobile: "Este aplicativo não está disponível em dispositivos móveis."
   },
   'pt': {
     add_vertex: "Adicionar Vértice",
@@ -160,6 +162,7 @@ export const messages: Record<Locale, {
     all_rights_reserved: "Todos os direitos reservados.",
     contact: "Contato:",
     radial_layout_config: "Configurações Layout de Radial",
-    select_language: "Selecionar Linguagem: "
+    select_language: "Selecionar Linguagem: ",
+    app_is_not_available_mobile: "This app is not available on mobile devices."
   }
 };
