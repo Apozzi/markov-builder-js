@@ -5,18 +5,6 @@ import AlphabetIterator from "./AlphabetIterator";
 
 const documentobj: any = document ? document : {};
 
-const overlaps = (a: any, b: any) => {
-  if (a === null || b === null) return false;
-  const rect1 = a.getBoundingClientRect();
-  const rect2 = b.getBoundingClientRect();
-  const isInHoriztonalBounds =
-    rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x;
-  const isInVerticalBounds =
-    rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y;
-  const isOverlapping = isInHoriztonalBounds && isInVerticalBounds;
-  return isOverlapping;
-}
-
 const createCloneObject = (objectId: String) => {
     if (objectId != "vertice") return;
     let clone = document.createElement('div');
@@ -48,9 +36,7 @@ const addObjectToTableObj = (gateId:String, clone: any, tableobj: any) => {
     if (gateObjs.length > 1) {
         tableobj.removeChild(gateObjs.slice(-1).pop() as Node);
     }
-
     tableobj.appendChild(clone);
-
 }
 
 const windowOffsetX = 170;
@@ -116,13 +102,10 @@ export function convexHull(vertices: any[]): any[] {
     return order === 2 ? -1 : 1; 
   });
 
-
   sortedVertices.unshift(start);
-
 
   const stack: any[] = [sortedVertices[0], sortedVertices[1], sortedVertices[2]];
   for (let i = 3; i < n; i++) {
-
     while (stack.length > 1 && orientation(stack[stack.length - 2], stack[stack.length - 1], sortedVertices[i]) !== 2) {
       stack.pop();
     }
