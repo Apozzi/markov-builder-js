@@ -11,7 +11,7 @@ Link to Hosted Webapp: (to do)
 
 # Visualização Gráfica.
 
-Aplicativo possibilita visualzação gráfica do histórico de transição de estado da cadeia de Markov.
+Aplicativo possibilita visualzação gráfica do histórico de transição de estado da cadeia de Markov, além do número de vezes que a vertice foi alcançada e a probabilidade geral do sistema.
 
 ![env](https://github.com/user-attachments/assets/46e6f72a-31d3-4e7e-91c6-44273a374727)
 
