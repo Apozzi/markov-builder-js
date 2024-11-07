@@ -11,7 +11,10 @@ Link to Hosted Webapp: (to do)
 
 # Visualização Gráfica.
 
-![env](https://github.com/user-attachments/assets/0fe786bf-ab1b-4092-9461-b4db0c845245)
+Aplicativo possibilita visualzação gráfica do histórico de transição de estado da cadeia de Markov.
+
+![env](https://github.com/user-attachments/assets/46e6f72a-31d3-4e7e-91c6-44273a374727)
+
 
 
 
