@@ -14,7 +14,6 @@ import { CircularLayout } from '../../utils/layouts/CircularLayout';
 import { GridLayout } from '../../utils/layouts/GridLayout';
 import { TreeLayout } from '../../utils/layouts/TreeLayout';
 import { RadialLayout } from '../../utils/layouts/RadialLayout';
-import { SugiyamaLayout } from '../../utils/layouts/SugiyamaLayout';
 import { SpectralLayout } from '../../utils/layouts/SpectralLayout';
 import { KamadaKawai } from '../../utils/KamadaKawaiAlgorithm';
 
@@ -191,7 +190,7 @@ export default class GraphSchematics extends React.Component<{}, {
       });
       GraphSchematicsManager.onChangeConfig().subscribe((config: any) => this.setState({config}));
 
-      //
+      // Algoritmos de Manipulação de Layout.
 
       GraphSchematicsManager.onApplyFruchtermanReingold().subscribe(() => {
           let { vertices, edges } = this.state;
@@ -246,12 +245,6 @@ export default class GraphSchematics extends React.Component<{}, {
         let { vertices, edges } = this.state;
         const treeLayout = new RadialLayout();
         this.setState({ vertices: treeLayout.layout(vertices, edges, config.selectedVertice) });
-      });
-
-      GraphSchematicsManager.onApplySugiyamaLayout().subscribe(() => {
-        let { vertices, edges } = this.state;
-        const treeLayout = new SugiyamaLayout();
-        this.setState({ vertices: treeLayout.layout(vertices, edges) });
       });
 
       GraphSchematicsManager.onApplySpectralLayout().subscribe(() => {

@@ -10,7 +10,7 @@ interface LayoutConfig {
 
 const DEFAULT_CONFIG: LayoutConfig = {
     epsilon: 0.01,
-    L0: 500,
+    L0: 240,
     K: 10
 };
 
@@ -39,9 +39,8 @@ export class KamadaKawai {
 
     private initializeMatrices(vertices: Vertex[], edges: Edge[]): void {
         this.floydWarshall(vertices, edges);
-        const maxDistance = this.getMaxDistance();
-        // Formula L = L0 /max_{i<j} d_{ij} (Recomendação)
-        const L = this.config.L0 / maxDistance;
+        // Nesse caso para esse simulador será melhor L=L_0
+        const L = this.config.L0;
         const K = this.config.K;
         this.computeIdealLengthAndSpringStrengthMatrix(vertices, L, K);
         this.Delta.set(vertices[0].id, Infinity);
@@ -135,17 +134,6 @@ export class KamadaKawai {
                 });
             });
         });
-    }
-
-    private getMaxDistance(): number {
-        let maxDistance = 0;
-        this.distanceMatrix.forEach((vid) => {
-            vid.forEach((uid) => {
-                const dist = vid!.get(uid)!;
-                if (maxDistance < dist) maxDistance = dist;
-            });
-        });
-        return maxDistance;
     }
 
     private computeIdealLengthAndSpringStrengthMatrix(vertices: Vertex[], L: number, K: number): void {

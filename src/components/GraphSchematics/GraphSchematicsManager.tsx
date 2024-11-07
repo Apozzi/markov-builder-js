@@ -40,7 +40,6 @@ export default class GraphSchematicsManager {
   private static applyTreeLayoutSubject = new Subject<any>();
   private static applyRadialLayoutSubject = new Subject<any>();
   private static applySpectralLayoutSubject = new Subject<any>();
-  private static applySugiyamaLayoutSubject = new Subject<any>();
 
 
   static applyKamadaKawai() {
@@ -49,14 +48,6 @@ export default class GraphSchematicsManager {
 
   static onApplyKamadaKawai() {
     return GraphSchematicsManager.applyKamadaKawaiSubject;
-  }
-
-  static applySugiyamaLayout() {
-    GraphSchematicsManager.applySugiyamaLayoutSubject.next({});
-  }
-
-  static onApplySugiyamaLayout() {
-    return GraphSchematicsManager.applySugiyamaLayoutSubject;
   }
 
   static applySpectralLayout() {

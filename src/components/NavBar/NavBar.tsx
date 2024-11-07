@@ -110,7 +110,6 @@ export default class NavBar extends React.Component<any> {
           <div className="subnav--content">
             <a onClick={() => GraphSchematicsManager.applyCircularLayout()}>Layout Circular</a>
             <a onClick={() => RadialLayoutConfigViewModal.openModal({})}>Layout Radial</a>
-            <a onClick={() => GraphSchematicsManager.applySugiyamaLayout()}>Layout de Camadas (Sugiyama)</a>
             <a onClick={() => TreeLayoutConfigViewModal.openModal({})}>Layout de Árvore</a>
             <a onClick={()=> GraphSchematicsManager.applyGridLayout()}>Layout de Grade</a>
             <a onClick={()=> GraphSchematicsManager.applySpectralLayout()}>Layout de Espectro</a>
