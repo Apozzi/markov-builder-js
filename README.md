@@ -37,7 +37,7 @@ To access the app online: https://markov-chain-js.web.app/
 
 # Execution
 
-To run locally, just install `npm run install` and then `npm run dev`.
+To run locally, just install `npm run install` and then `npm run dev`. 
 
 ## Author
 
