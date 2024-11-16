@@ -1,8 +1,6 @@
+import toast from "react-hot-toast";
 import GraphSchematicsManager from "../components/GraphSchematics/GraphSchematicsManager";
 import AlphabetIterator from "./AlphabetIterator";
-
-
-
 const documentobj: any = document ? document : {};
 
 const createCloneObject = (objectId: String) => {
@@ -20,29 +18,10 @@ const createCloneObject = (objectId: String) => {
     return clone;
 }
 
-const addObjectToTableObj = (gateId:String, clone: any, tableobj: any) => {
-    clone.style.marginTop = "-87px";
-    clone.style.top = "50px";
-    clone.style.left = "0px";
-    clone.style.position = "relative";
-    clone.style.zIndex = "10";
-    clone.setAttribute( 'id', gateId + "Set" );
-    clone.onmousedown = () => {
-        cloneFunction(gateId);
-        tableobj.removeChild(clone);
-
-    }
-    let gateObjs = Array.from(tableobj.childNodes).filter((obj : any) => obj.id !== "controlline");
-    if (gateObjs.length > 1) {
-        tableobj.removeChild(gateObjs.slice(-1).pop() as Node);
-    }
-    tableobj.appendChild(clone);
-}
-
 const windowOffsetX = 170;
 const windowOffsetY= 60;
 
-const cloneFunction = (gateId : String) => {
+const cloneFunction = (gateId : String, intl: any) => {
   let dragId = gateId + "Drag";
   let clone = createCloneObject(gateId);
   if (!clone) return;
@@ -59,7 +38,12 @@ const cloneFunction = (gateId : String) => {
     documentobj.onmousedown= () => {};
     const x = e.clientX-windowOffsetX;
     const y = e.clientY-windowOffsetY;
-    GraphSchematicsManager.addVertex({x, y, label:AlphabetIterator.getNextLetter()});
+    if (x > 138) {
+      GraphSchematicsManager.addVertex({x, y, label:AlphabetIterator.getNextLetter()});
+    } else {
+      toast(intl.formatMessage({ id: 'drag_vertice_valid_area' }))
+     
+    }
     if (clone) {
       clone.remove();
       clone = undefined;
@@ -117,20 +101,8 @@ export function convexHull(vertices: any[]): any[] {
 
 
 export default class SimulatorUtils {
-    public static cloneObject(gateId : String) {
-        cloneFunction(gateId);
-    }
-
-    public static addAllGatesInTable(gatesObj: any) {
-        for (let gateObj of gatesObj) {
-            SimulatorUtils.addObjectInTable(gateObj.gate, gateObj.x, gateObj.y);
-        }
-    }
-
-    private static addObjectInTable(gateId : String, x: number, y: number) {
-        let clone = createCloneObject(gateId);
-        let tableobjs = document.getElementById(`table-box_${x}_${y}`);
-        addObjectToTableObj(gateId, clone, tableobjs);
+    public static cloneObject(gateId : String, intl: any) {
+        cloneFunction(gateId, intl);
     }
 
     public static calculateConvexHull(vertices: any[]): any[] {

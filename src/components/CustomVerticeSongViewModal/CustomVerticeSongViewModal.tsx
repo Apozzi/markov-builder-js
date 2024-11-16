@@ -6,7 +6,7 @@ import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import { NotaMusical } from '../../utils/NotasMusicaisEnum';
 import toast from 'react-hot-toast';
 import { Vertex } from '../../interfaces/Vertex';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 interface State {
   showModal: boolean;
@@ -17,7 +17,7 @@ interface State {
   showSoundInfo: boolean; 
 }
 
-export default class CustomVerticeSongViewModal extends React.Component<any, State> {
+class CustomVerticeSongViewModal extends React.Component<any, State> {
   static openSubject = new Subject();
 
   customStyles = {
@@ -105,6 +105,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
   }
 
   handleSave = () => {
+    const {intl} = this.props;
     const updatedVertices = this.state.vertices.map(vertex => ({
       ...vertex,
       sound: {
@@ -117,7 +118,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
 
     GraphSchematicsManager.updateVertices(updatedVertices);
     this.handleCloseModal();
-    toast('Salvo com Sucesso.');
+    toast(intl.formatMessage({ id: 'saved_successfully' }));
   }
 
   handleShowSoundInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,3 +220,5 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
     );
   }
 }
+
+export default injectIntl(CustomVerticeSongViewModal);

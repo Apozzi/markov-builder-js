@@ -54,6 +54,9 @@ export const messages: Record<Locale, {
   radial_layout_config: string;
   select_language: string;
   app_is_not_available_mobile: string;
+  drag_vertice_valid_area: string;
+  saved_successfully: string;
+  applied_successfully: string;
 }> = {
   'en': {
     add_vertex: "Add Vertex",
@@ -108,7 +111,10 @@ export const messages: Record<Locale, {
     contact: "Contact:",
     radial_layout_config: "Radial Layout Configuration",
     select_language: "Select Language: ",
-    app_is_not_available_mobile: "Este aplicativo não está disponível em dispositivos móveis."
+    app_is_not_available_mobile: "This app is not available on mobile devices.",
+    drag_vertice_valid_area:  "You must drag the vertex to a valid area.",
+    saved_successfully: "Saved successfully.",
+    applied_successfully: "Applied successfully."
   },
   'pt': {
     add_vertex: "Adicionar Vértice",
@@ -163,6 +169,9 @@ export const messages: Record<Locale, {
     contact: "Contato:",
     radial_layout_config: "Configurações Layout de Radial",
     select_language: "Selecionar Linguagem: ",
-    app_is_not_available_mobile: "This app is not available on mobile devices."
+    app_is_not_available_mobile: "Este aplicativo não está disponível em dispositivos móveis. ",
+    drag_vertice_valid_area:  "Você deve arrastar o vértice para uma região válida.",
+    saved_successfully: "Salvo com sucesso.",
+    applied_successfully: "Aplicado com sucesso."
   }
 };

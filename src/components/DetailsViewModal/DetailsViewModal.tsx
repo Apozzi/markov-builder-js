@@ -5,7 +5,7 @@ import './DetailsViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import toast from 'react-hot-toast';
 import { Vertex } from '../../interfaces/Vertex';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 interface EdgeWeights {
   [sourceId: number]: {
@@ -13,7 +13,7 @@ interface EdgeWeights {
   };
 }
 
-export default class DetailsViewModal extends React.Component<any> {
+class DetailsViewModal extends React.Component<any> {
   static openSubject = new Subject();
 
   customStyles = {
@@ -124,6 +124,7 @@ export default class DetailsViewModal extends React.Component<any> {
 
   applyChangesOnTheGraph = () => {
     let { vertices, edgeWeights } = this.state;
+    const { intl } = this.props;
     const edges: any = [];
     Object.entries(edgeWeights).forEach(([sourceId, targets]) => {
       Object.entries(targets).forEach(([targetId, weight] : any[]) => {
@@ -141,7 +142,7 @@ export default class DetailsViewModal extends React.Component<any> {
       edgeWeightsBck: {...edgeWeights}
     });
     this.handleCloseModal();
-    toast("Aplicado com Sucesso.");
+    toast(intl.formatMessage({ id: 'applied_successfully' }));
   }
 
   render() {
@@ -210,3 +211,5 @@ export default class DetailsViewModal extends React.Component<any> {
     );
   }
 }
+
+export default injectIntl(DetailsViewModal);

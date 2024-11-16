@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import './ConfigurationViewModal.css';
 import GraphSchematicsManager from '../GraphSchematics/GraphSchematicsManager';
 import toast from 'react-hot-toast';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { LOCALES } from '../../i18n/locales';
 import { MdFlag } from 'react-icons/md';
 import { FaFlagUsa } from 'react-icons/fa';
@@ -18,7 +18,7 @@ interface State {
   language: string;
 }
 
-export default class ConfigurationViewModal extends React.Component<any, State> {
+class ConfigurationViewModal extends React.Component<any, State> {
   static openSubject = new Subject();
 
   customStyles = {
@@ -69,12 +69,13 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
   }
 
   applyChanges = () => {
+    const { intl } = this.props;
     let { speed } = this.state;
     GraphSchematicsManager.toggleSongInfo(this.state.showSoundInfo);
     GraphSchematicsManager.setConfig({
       speed
     });
-    toast('Salvo com Sucesso.');
+    toast(intl.formatMessage({ id: 'saved_successfully' }));
     this.handleCloseModal();
   }
 
@@ -162,3 +163,5 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
     );
   }
 }
+
+export default injectIntl(ConfigurationViewModal);
