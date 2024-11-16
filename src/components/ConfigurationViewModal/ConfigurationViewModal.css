@@ -53,7 +53,7 @@ div {
     gap: 5px;
   }
   
-  .note-selector, .url-input {
+.url-input {
     width: 100%;
     padding: 8px;
     margin-top: 10px;
@@ -73,19 +73,6 @@ div {
     justify-content: space-between;
   }
   
-  .save-button {
-    padding: 10px 20px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .save-button:hover {
-    background: #45a049;
-  }
-
   .language-label {
     display: block;
     font-size: 1.1rem;
@@ -96,17 +83,6 @@ div {
     position: relative;
     display: flex;
     align-items: center;
-  }
-  
-  .language-select {
-    padding: 8px 12px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    appearance: none;
-    background-color: #fff;
-    background-image: none;
-    padding-right: 30px;
   }
   
   .language-select option {

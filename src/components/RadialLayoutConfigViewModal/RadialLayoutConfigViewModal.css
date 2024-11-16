@@ -30,18 +30,3 @@ div {
   display: flex;
   justify-content: space-between;
 }
-
-.save-button {
-  padding: 10px 20px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.save-button:hover {
-  background: #45a049;
-}
-
-  

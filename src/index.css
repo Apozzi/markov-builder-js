@@ -13,30 +13,14 @@ code {
     monospace;
 }
 
-
-.default-button {
-  padding: 11px 24px;
-  background: #217cda;
-  border: none;
+.selector {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background: #444;
+  color: white;
+  border: 1px solid #666;
   border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.confirm-button {
-  background: #30cc1d;
-  padding: 11px 24px;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.title {
-  color: white;
-  font-size: 18px;
 }
 
 .toolbox-button {
@@ -54,6 +38,39 @@ code {
 
 .toolbox-button:hover {
   background-color: #413438;
+}
+
+.save-button, .cancel-button, .next-button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button {
+  background: #4CAF50;
+}
+
+.save-button:hover {
+  background: #45a049;
+}
+
+.cancel-button {
+  background-color: #aa040e;
+}
+
+.cancel-button:hover {
+  background-color: #6f030a;
+}
+
+.next-button {
+  background-color: #0467aa;
+}
+
+.next-button:hover {
+  background-color: #04446f;
 }
 
 .vertice {
@@ -161,40 +178,6 @@ code {
 .control-right:hover {color: #c1b1b7;}
 .control-bottom:hover {color: #c1b1b7;}
 .control-center:hover {background-color: #6d6366;}
-
-.button {
-  background-color: #04AA6D; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 40px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin-right: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.confirmation-button:hover{
-  background-color: #037d50;
-}
-
-.cancel-button {
-  background-color: #aa040e;
-}
-
-.cancel-button:hover {
-  background-color: #6f030a;
-}
-
-.next-button {
-  background-color: #0467aa;
-}
-
-.next-button:hover {
-  background-color: #04446f;
-}
 
 .sound-info-label {
   font-size: 14px;

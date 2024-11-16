@@ -199,9 +199,9 @@ export default class DetailsViewModal extends React.Component<any> {
               </table>}
 
               <div className='manipulation-buttons-transition-matrix'>
-                <button className='next-button button' onClick={this.applyChangesOnTheGraph}><FormattedMessage id={"apply_to_graph"}/></button>
-                <button className='confirmation-button button' onClick={this.addVertex}><FormattedMessage id={"add_vertex"}/></button>
-                <button className='cancel-button button' onClick={this.deleteLastVertex}><FormattedMessage id={"delete_last_vertex"}/></button>
+                <button className='save-button' onClick={this.applyChangesOnTheGraph}><FormattedMessage id={"apply_to_graph"}/></button>
+                <button className='next-button' onClick={this.addVertex}><FormattedMessage id={"add_vertex"}/></button>
+                <button className='cancel-button' onClick={this.deleteLastVertex}><FormattedMessage id={"delete_last_vertex"}/></button>
               </div>
             </div>
           </div>

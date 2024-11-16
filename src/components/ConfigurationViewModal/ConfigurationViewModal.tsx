@@ -138,7 +138,7 @@ export default class ConfigurationViewModal extends React.Component<any, State> 
                   id="language-select"
                   value={this.state.language}
                   onChange={this.handleLanguageChange}
-                  className="language-select"
+                  className="selector"
                 >
                   <option value={LOCALES.PORTUGUESE}>
                     <MdFlag className="flag-icon" /> Português

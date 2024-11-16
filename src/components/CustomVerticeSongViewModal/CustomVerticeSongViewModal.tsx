@@ -177,7 +177,7 @@ export default class CustomVerticeSongViewModal extends React.Component<any, Sta
                       <select
                         value={this.state.selectedNotes[vertex.id]}
                         onChange={(e) => this.handleNoteChange(vertex.id, e.target.value as NotaMusical)}
-                        className="note-selector"
+                        className="selector"
                       >
                         {Object.entries(NotaMusical).map(([key, value]) => (
                           <option key={key} value={value}>{value}</option>
