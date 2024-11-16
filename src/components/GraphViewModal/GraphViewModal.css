@@ -6,10 +6,6 @@
     pointer-events: none;
 }
 
-div {
-    color: white;
-}
-
 .content {
     bottom: 0px;
     position: fixed;

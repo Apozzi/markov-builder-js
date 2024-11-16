@@ -5,30 +5,6 @@
     z-index: 22;
 }
 
-div {
-    color: white;
-}
-
-.modal-content-extra {
-    padding-left: 60px;
-    padding-right: 60px;
-    padding-top: 5px;
-}
-
-.matrix-input {
-    background: #3f3639;
-    border: none;
-    padding: 13px;
-    font-size: 14px;
-    border-radius: 10px;
-    margin: 10px;
-    color:white;
-}
-
-.transition-matrix {
-    margin-bottom: 50px;
-}
-
 .vertex-sound-config {
   padding: 20px;
   color: white;
@@ -53,13 +29,16 @@ div {
   gap: 5px;
 }
 
+.url-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background: #444;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 4px;
+}
 
 .url-input {
   width: calc(100% - 16px);
-}
-
-.modal-actions {
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
 }

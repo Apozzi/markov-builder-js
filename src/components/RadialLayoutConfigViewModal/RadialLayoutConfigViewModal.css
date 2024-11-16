@@ -5,16 +5,6 @@
     z-index: 22;
 }
 
-div {
-    color: white;
-}
-
-.modal-content-extra {
-    padding-left: 60px;
-    padding-right: 60px;
-    padding-top: 20px;
-}
-
 .vertex-select {
   width: 100%;
   padding: 8px;
@@ -23,10 +13,4 @@ div {
   color: white;
   border: 1px solid #666;
   border-radius: 4px;
-}
-
-.modal-actions {
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
 }

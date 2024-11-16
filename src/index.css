@@ -13,6 +13,10 @@ code {
     monospace;
 }
 
+div, a {
+  color: white;
+}
+
 .selector {
   width: 100%;
   padding: 8px;
@@ -95,8 +99,19 @@ code {
   border: 2px solid #453138;
 }
 
-.control-center {
+.control-center, .control-left, .control-right, 
+.control-bottom, .control-top {
     position: absolute;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.control-center {
     border: 2px solid #453138;
     border-radius: 51px;
     width: 48px;
@@ -104,79 +119,38 @@ code {
     top: 45px;
     left: 43px;
     font-size: large;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
 }
 
 .control-left {
     font-size: 30px;
-    position: absolute;
     left: 10px;
     top: 49px;
     color: #453138;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
 }
 
 .control-right {
     font-size: 30px;
-    position: absolute;
     right: 11px;
     top: 49px;
     color: #453138;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
 }
 
 .control-bottom {
     font-size: 30px;
-    position: absolute;
     left: 55px;
     bottom: 5px;
     color: #453138;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
 }
 
 .control-top {
     font-size: 30px;
-    position: absolute;
     left: 56px;
     top: 3px;
     color: #453138;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
 }
 
-.control-top:hover {color: #c1b1b7;}
-.control-left:hover {color: #c1b1b7;}
-.control-right:hover {color: #c1b1b7;}
-.control-bottom:hover {color: #c1b1b7;}
+.control-top:hover, .control-left:hover, .control-right:hover, 
+.control-right:hover, .control-bottom:hover   {color: #c1b1b7;}
 .control-center:hover {background-color: #6d6366;}
 
 .sound-info-label {

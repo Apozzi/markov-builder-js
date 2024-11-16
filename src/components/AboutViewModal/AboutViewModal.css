@@ -5,10 +5,6 @@
     z-index: 22;
 }
 
-div {
-    color: white;
-}
-
 .content-about {
     width: 500px;
     margin: auto;
@@ -52,8 +48,4 @@ div {
 .svg-inline--fa {
     margin: 10px;
     cursor: pointer;
-}
-
-a {
-    color: white;
 }

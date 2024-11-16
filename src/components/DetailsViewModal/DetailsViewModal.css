@@ -5,15 +5,6 @@
     z-index: 20;
 }
 
-div {
-    color: white;
-}
-
-.modal-content-extra {
-    padding-left: 60px;
-    padding-top: 5px;
-}
-
 .matrix-input {
     background: #3f3639;
     border: none;
